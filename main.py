@@ -16,15 +16,17 @@ def billboard():
     d_p.print_line_break()
     print("""
             Please make a selection:
-            1. Search by package ID
+            1. Search all Packages
+            2. Search all Hubs
     """)
     d_p.print_line_break()
 
     user_selection = int(input('Selection: '))
 
     if user_selection == 1:
-        package = int(input('Enter the Package ID: '))
-        d_p.package_search(package)
+        d_p.package_search(int(input('Enter the Package ID: ')))
+    elif user_selection == 2:
+        d_p.hub_search(input('Enter the name of the hub: '))
     else:
         print('Invalid choice.')
         billboard()
