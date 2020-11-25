@@ -1,6 +1,7 @@
 import csv
 
 packages = []
+stops = []
 
 
 class Package:
@@ -23,6 +24,8 @@ class Package:
 
 
 def parse_distance_table():
+    global stops
+
     print('Distance table loaded and parsed.')
     with open('data/Distance Table.csv') as distance_table:
         lines = csv.reader(distance_table)
@@ -74,8 +77,8 @@ def parse_package_file():
                 packages.append([package_id, [address, city, state, zip_code,
                                               deadline, mass, note]])
 
-    # for package in packages:
-    #     print(package)
+    for package in packages:
+        print(package)
 
 
 def package_search(package_id: int) -> object:
@@ -84,6 +87,7 @@ def package_search(package_id: int) -> object:
     print(f'Package ID #{package_id} information:\n')
     print(packages[package_id - 1])
     print()
+
 
 def print_line_break():
     print('*' * 100)
