@@ -6,6 +6,9 @@ hm = HashMap()
 stops = defaultdict(list)
 
 
+# stops = {}
+
+
 def parse_distance_table():
     """
     Parses csv file `Distance Table` and fills a list with the data. Uses
@@ -20,36 +23,21 @@ def parse_distance_table():
         # lines = csv.reader(distance_table)
         distances = [row for row in csv.reader(distance_table)]
 
+    # iterates over csv file and adds each stop name value from each row[0]
+    # as the key. Then adds the dict values as a list of destination and
+    # distance pair for a time complexity of O(n^2)
+    for x, row in enumerate(distances):
+        if x > 0:  # skips first row
+            for y, col in enumerate(row):  # iterates over the columns
+                if 1 < y < len(row):
+                    # assigns the miles column w/ the destination
+                    stops[row[0]].append([distances[0][y],
+                                          distances[x][y]])
 
-    for row in reversed(distances):
-        stop_name = row[0]
-        for x, field in enumerate(row):
-            if field > 1:
-                stops[stop_name].append(
-
-                )
-
-        # temp = []
-        # for x, line in enumerate(lines):
-        #     temp.append(line)
-
-        # for x, row in enumerate(temp):
-        #     # if x > 0:
-        #     stops[row[0]] = []
-        #     for y, column in enumerate(row):
-        #         fields = list(column.split(','))
-        #         if y > 1:
-        #             stops[row[0]].append(fields)
-
-        # for k, v in stops.items():
-        #     print(k, v)
-        # iterate over locations in reverse and associate mileage with
-        # each stop and it's destination options
-
-
-# def add_waypoint(from_vertex, to_vertex, distance):
-#     waypoint = (from_vertex, to_vertex, distance)
-#     return waypoint
+    # for k, v in stops.items():
+    #     print(k)
+    #     for val in v:
+    #         print(f'\t {val}')
 
 
 def parse_package_file():
