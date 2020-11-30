@@ -18,7 +18,8 @@ class HashMap:
     # automatically appends new packages to the end of the hashmap with a
     # generated package id making this data structure self-adjusting
     def __setitem__(self, package_id, address, deadline, city, zipcode,
-                    weight, delivery_status='', new_package=False):
+                    weight, special_note=None, delivery_status='Not Delivered',
+                    new_package=False):
         """
         Takes input add a record to the HashMap class list `hashmap`. Uses
         package ID as the key and the remainder of the line data as a list
@@ -40,6 +41,7 @@ class HashMap:
                 city,
                 zipcode,
                 weight,
+                special_note,
                 delivery_status
             ]])
         else:
@@ -51,6 +53,7 @@ class HashMap:
                 city,
                 zipcode,
                 weight,
+                special_note,
                 delivery_status
             ]])
 

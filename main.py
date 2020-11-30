@@ -4,7 +4,7 @@ import data_parser as d_p
 def main():
     print()
     d_p.parse_distance_table()
-    d_p.parse_package_file()
+    d_p.parse_package_file(package_file)
     print()
 
     while True:
@@ -37,4 +37,6 @@ def search_for_package():
 
 
 if __name__ == '__main__':
+    package_file = 'data/TestPackageFile.csv'
+    print('Running main...')
     main()
