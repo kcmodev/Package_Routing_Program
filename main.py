@@ -1,4 +1,5 @@
 import data_parser as d_p
+from delivery_algorithm import deliver_packages
 
 
 def main():
@@ -15,7 +16,8 @@ def billboard():
     d_p.print_line_break()
     print("""
             Please make a selection:
-            1. Search all Packages
+            1. Search all packages
+            2. Initiate package delivery algorithm
     """)
     d_p.print_line_break()
 
@@ -24,6 +26,8 @@ def billboard():
 
         if user_selection == 1:
             d_p.package_search(int(input('Enter the Package ID: ')))
+        elif user_selection == 2:
+            deliver_packages()
         else:
             raise ValueError
 

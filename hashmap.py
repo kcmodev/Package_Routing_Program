@@ -34,6 +34,7 @@ class HashMap:
         :return:
         """
 
+        # not a new package, used for initializing the hashmap
         if new_package is False:
             self.hashmap.append([package_id, [
                 address,
@@ -44,10 +45,14 @@ class HashMap:
                 special_note,
                 delivery_status
             ]])
+        # user entering a new package into the list
+        # add functionality later to enable entering of special notes
         else:
             # uses length of the list to determine the next available number
             # for the package ID
-            self.hashmap.append([len(self.hashmap), [
+            # could add function later to remove unused package numbers and
+            # append packages to the spaces in the list
+            self.hashmap.append([(len(self.hashmap) + 1), [
                 address,
                 deadline,
                 city,
@@ -62,8 +67,11 @@ class HashMap:
     def __getitem__(self, item):
         return self.hashmap[item]
 
+    # implements an iterator function for the hashmap class O(n)
     def __iter__(self):
         return iter(self.hashmap)
 
+    # implements a len function for the hashmap to enable resizing based on
+    # the length of the current hashmap
     def __len__(self):
         return len(self.hashmap)

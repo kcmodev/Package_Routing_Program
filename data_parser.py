@@ -1,9 +1,11 @@
 import csv
+import re
 from hashmap import HashMap
 from collections import defaultdict
 
 hm = HashMap()
-stops = defaultdict(list)
+# stops = defaultdict(list)
+stops = {}
 
 
 def parse_distance_table():
@@ -24,22 +26,50 @@ def parse_distance_table():
     # as the key. Then adds the dict values as a list of destination and
     # distance pair for a time complexity of O(n^2)
     for x, row in enumerate(distances):
+        stop_list = []
         if x > 0:  # skips first row
             for y, col in enumerate(row):  # iterates over the columns
                 if 1 < y < len(row):
                     # assigns the miles column w/ the destination
-                    # skipping the first stop which is the 'HUB'
+                    # skipping the first stop which is 'HUB'
                     if row[0] == 'Western Governors University' \
                             and distances[x][y] == '0.0':
                         continue
                     else:
-                        stops[row[0]].append([distances[0][y],
-                                             distances[x][y]])
+                        stop_list.append((distances[x][y].strip(),
+                                         distances[0][y].strip()))
+                        
+        stops[row[1][:-7].strip()] = stop_list
 
-    for k, v in stops.items():
-        print(k)
-        for val in v:
-            print(f'\t {val}')
+    # for k in stops.items():
+    #     print(k, type(k))
+    # for k, v in stops.items():
+    #     print(k, type(k))
+    #     for val in v:
+    #         print(f'\t {val}')
+
+
+def determine_distance(stop, position):
+    # use stop name as key, and return value corresponding with finish
+    stop_list = stops[stop]
+    print(f'has a distance of {stop_list[position][0]} miles')
+
+    distance = stop_list[position][0]
+    return float(distance)
+
+
+def determine_next_stop(list_of_stops):
+    shortest = 9999
+
+    for x, stop in enumerate(list_of_stops):
+        print(f'stop "{stop}"', end=' ')
+        distance = determine_distance(stop, x)
+
+        if distance < shortest:
+            shortest = distance
+            print(f'current shortest: {shortest}')
+
+    print(f'shortest distance found: {shortest}')
 
 
 def parse_package_file(package_file):
