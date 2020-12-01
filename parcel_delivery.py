@@ -12,3 +12,6 @@ class Truck:
 
     def travel(self):
         pass
+
+    # def mark_package_delivered(self, package):
+    #     self.packages_loaded.pop(package)
