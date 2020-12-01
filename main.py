@@ -1,5 +1,5 @@
 import data_parser as d_p
-from delivery_algorithm import deliver_packages
+from delivery_algorithm import deliver_all_packages
 
 
 def main():
@@ -27,7 +27,7 @@ def billboard():
         if user_selection == 1:
             d_p.package_search(int(input('Enter the Package ID: ')))
         elif user_selection == 2:
-            deliver_packages()
+            deliver_all_packages()
         else:
             raise ValueError
 

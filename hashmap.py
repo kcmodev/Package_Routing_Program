@@ -1,13 +1,5 @@
-# Develop a hash table, without using any additional libraries or classes,
-# that has an insertion function that takes the following components as
-# input and inserts the components into the hash table:
-# • package ID number
-# • delivery address
-# • delivery deadline
-# • delivery city
-# • delivery zip code
-# • package weight
-# • delivery status (e.g., delivered, en route)
+import data_parser as data
+
 
 class HashMap:
 
@@ -64,8 +56,10 @@ class HashMap:
 
     # look-up function
     # returns an item from the hashmap - O(1)
-    def __getitem__(self, item):
-        return self.hashmap[item]
+    def get_package_id(self, address):
+        for x, package in enumerate(self.hashmap):
+            if self.hashmap[x][1][0] == data.get_address_from_name(address):
+                return self.hashmap[x][0]
 
     # implements an iterator function for the hashmap class O(n)
     def __iter__(self):

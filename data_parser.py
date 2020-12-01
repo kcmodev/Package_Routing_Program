@@ -1,10 +1,7 @@
 import csv
-import re
 from hashmap import HashMap
-from collections import defaultdict
 
 hm = HashMap()
-# stops = defaultdict(list)
 stops = {}
 names_and_addresses = {}
 
@@ -26,23 +23,8 @@ def parse_distance_table():
     # iterates over csv file and adds each stop name value from each row[0]
     # as the key. Then adds the dict values as a list of destination and
     # distance pair for a time complexity of O(n^2)
-    # for x, row in enumerate(distances):
-    #     stop_list = []
-    #     if x > 0:  # skips first row
-    #         for y, col in enumerate(row):  # iterates over the columns
-    #             if 1 < y < len(row):
-    #                 # assigns the miles column w/ the destination
-    #                 # skipping the first stop which is 'HUB'
-    #                 if row[0] == 'Western Governors University' \
-    #                         and distances[x][y] == '0.0':
-    #                     continue
-    #                 else:
-    #                     stop_list.append((distances[x][y].strip(),
-    #                                      distances[0][y].strip()))
-    #
-    #     stops[row[1][:-7].strip()] = stop_list
 
-    # iterate over column titles
+    # iterate over columns
     for x in range(0, len(distances)):
         stops_list = []
         if x > 0:  # puts first line at WGU in the csv file column header
@@ -66,18 +48,17 @@ def parse_distance_table():
             # of the stop name
             stops[f'{start_name}'] = stops_list
 
-    for k, v in stops.items():
-        print(k)
-        for val in v:
-            print(f'\t {val}')
+    # for k, v in stops.items():
+    #     print(k)
+    #     for val in v:
+    #         print(f'\t {val}')
 
-    print(names_and_addresses)
+    # print(names_and_addresses)
 
 
 def determine_distance(start, stop):
     # use stop name as key
     # search list of stops for corresponding value
-
     start_name = names_and_addresses.get(start)
     stop_name = names_and_addresses.get(stop)
 
@@ -85,30 +66,23 @@ def determine_distance(start, stop):
 
     return float(x[0]), stop_name
 
-    # starting_point_name = stops[start[1]]
-    # distance = stop_list[position + 1][0]
-    # stop_name = stop_list[position + 1][1]
-
-    # print(f'{stop_name} has a distance of {distance} miles')
-    #
-    # return float(distance), stop_name
-
 
 def determine_next_stop(start, list_of_stops):
     shortest_distance = 9999
     closest_stop = ''
 
     for x, stop in enumerate(list_of_stops):
-        # print(f'stop "{stop}"', end=' ')
         distance, stop_name = determine_distance(start, stop)
+        print(f'\t {stop_name} is {distance} away.')
 
         if distance < shortest_distance:
             shortest_distance = distance
             closest_stop = stop_name
-            # print(f'current shortest_distance: {shortest_distance}')
 
-    print(f'shortest distance distance: {shortest_distance} miles'
-          f', next stop is: {closest_stop}\n')
+    print(f'shortest distance : {shortest_distance} miles. '
+          f'Next stop is: {closest_stop}.\n')
+
+    return closest_stop
 
 
 def parse_package_file(package_file):
@@ -167,6 +141,12 @@ def package_search(package_id: int):
 
     except ValueError:
         print(f'"{package_id}" is not a valid selection.')
+
+
+def get_address_from_name(address):
+    for key, value in names_and_addresses.items():
+        if value == address:
+            return key
 
 
 def print_line_break():
