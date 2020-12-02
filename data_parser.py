@@ -68,21 +68,23 @@ def determine_distance(start, stop):
 
 
 def determine_next_stop(start, list_of_stops):
+    print(f'\n{"*" * 10} finding next stop....')
     shortest_distance = 9999
-    closest_stop = ''
+    closest_stop, closest_address = '', ''
 
     for x, stop in enumerate(list_of_stops):
-        distance, stop_name = determine_distance(start, stop)
+        distance, stop_name = determine_distance(start, stop[1][0])
         print(f'\t {stop_name} is {distance} away.')
 
         if distance < shortest_distance:
             shortest_distance = distance
             closest_stop = stop_name
+            closest_address = stop[1][0]
 
     print(f'shortest distance : {shortest_distance} miles. '
-          f'Next stop is: {closest_stop}.\n')
+          f'Next stop is: {closest_stop} ({closest_address}).\n')
 
-    return closest_stop
+    return closest_stop, closest_address
 
 
 def parse_package_file(package_file):

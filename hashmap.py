@@ -55,7 +55,7 @@ class HashMap:
             ]])
 
     # look-up function
-    # returns an item from the hashmap - O(1)
+    # returns an item from the hashmap - O(n)
     def get_package_id(self, address):
         for x, package in enumerate(self.hashmap):
             if self.hashmap[x][1][0] == data.get_address_from_name(address):
@@ -69,3 +69,6 @@ class HashMap:
     # the length of the current hashmap
     def __len__(self):
         return len(self.hashmap)
+
+    def __getitem__(self, item):
+        return self.hashmap[item]
