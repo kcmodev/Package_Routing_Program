@@ -61,6 +61,16 @@ class HashMap:
             if self.hashmap[x][1][0] == data.get_address_from_name(address):
                 return self.hashmap[x][0]
 
+    def set_delivery_status(self, package_id, status):
+        """
+        Takes package id as input to srt delivery status for a package in the
+        hashmap
+        :param package_id:
+        :param status:
+        :return:
+        """
+        self.hashmap[int(package_id) - 1][1][6] = status
+
     # implements an iterator function for the hashmap class O(n)
     def __iter__(self):
         return iter(self.hashmap)

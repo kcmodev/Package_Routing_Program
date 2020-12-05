@@ -4,8 +4,6 @@ import data_parser as data
 STARTING_HUB = 'Salt Lake City UT'
 
 truck_1 = Truck()
-
-
 # truck_2 = Truck()
 
 
@@ -21,11 +19,10 @@ def deliver_all_packages():
 
     # start of day, set starting point to WGU
     truck_1.current_location = STARTING_HUB
-    # truck_1.__setattr__('current_location', STARTING_HUB)
-    print(f'Truck 1 current location: {truck_1.current_location}')
 
     while truck_1.num_packages_loaded() > 0:
-        print(f'num pkgs loaded: {truck_1.num_packages_loaded()}')
+        print(f'\nTruck 1 current location: {truck_1.current_location}')
+        print(f'num packages on truck 1: {truck_1.num_packages_loaded()}')
         # get the closest stop
         next_stop_name, next_stop_address, next_stop_distance = \
             data.determine_next_stop(truck_1.current_location, list_of_stops)
@@ -35,6 +32,7 @@ def deliver_all_packages():
 
         # mark as delivered and remove from truck
         truck_1.deliver_package(delivered_package_id)
+        truck_1.miles_traveled += next_stop_distance
         truck_1.current_location = next_stop_address
 
         # remove stop from list of packages that need to be delivered
@@ -48,8 +46,8 @@ def deliver_all_packages():
         #     print('\t', x)
 
     print('ALL PACKAGES DELIVERED')
+    print(f'\nTruck 1 traveled {truck_1.miles_traveled} miles total.')
 
-
-def find_next_stop():
-    for package in truck_1.packages_loaded:
-        pass
+    print('\nAll packages:')
+    for x in data.hm:
+        print('\t', x)

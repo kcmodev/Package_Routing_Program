@@ -65,15 +65,15 @@ def determine_distance(start_address, stop_address):
     start_index = list(names_and_addresses.keys()).index(start_address)
     stop_index = list(names_and_addresses.keys()).index(stop_address)
 
-    print(f'start index: {start_index}, stop index: {stop_index}')
+    # print(f'start index: {start_index}, stop index: {stop_index}')
 
     # check where address falls in the list
     # if stop is after, use stop location to find distance
     if start_index < stop_index:
         # get list of stops associated with start
         # return distance to stop
-        print('find with stop location')
-        print(f'searching {destination_name} adjacency list')
+        # print('find with stop location')
+        # print(f'searching {destination_name} adjacency list')
         distance_list = stops[destination_name]
 
         for stop in distance_list:
@@ -85,8 +85,8 @@ def determine_distance(start_address, stop_address):
     elif start_index > stop_index:
         # get list of stops associated with the stop
         # return distance to start
-        print('find with start location.')
-        print(f'searching {origination_name} adjacency list')
+        # print('find with start location.')
+        # print(f'searching {origination_name} adjacency list')
         distance_list = stops[origination_name]
 
         for stop in distance_list:
@@ -112,7 +112,7 @@ def determine_next_stop(start, list_of_stops):
                 closest_stop_name = stop_name
                 closest_stop_address = stop[1][0]
 
-    print(f'\tShortest distance: {shortest_distance} miles. '
+    print(f'\n\tShortest distance: {shortest_distance} miles. '
           f'Next stop is: {closest_stop_name} ({closest_stop_address}).\n')
 
     return closest_stop_name, closest_stop_address, shortest_distance
