@@ -38,8 +38,10 @@ def deliver_all_packages():
         truck_1.current_location = next_stop_address
 
         # remove stop from list of packages that need to be delivered
-        # list_of_stops.remove(x for x in list_of_stops
-        #                      if delivered_package_id == x[0])
+        for stop in list_of_stops:
+            if stop[1][0] == next_stop_address:
+                list_of_stops.remove(stop)
+                break
 
         # print('\nlist_of_stops[] (in main algo) after a delete:')
         # for x in list_of_stops:
