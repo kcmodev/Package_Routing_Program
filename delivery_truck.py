@@ -29,5 +29,8 @@ class Truck:
 
                 return
 
-    def calculate_miles_traveled(self):
+    def num_packages_loaded(self):
+        return len(self.packages_loaded)
+
+    def calculate_time_traveled(self):
         pass

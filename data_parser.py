@@ -56,35 +56,64 @@ def parse_distance_table():
     # print(names_and_addresses)
 
 
-def determine_distance(start, stop):
+def determine_distance(start_address, stop_address):
     # use stop name as key
     # search list of stops for corresponding value
-    start_name = names_and_addresses.get(start)
-    stop_name = names_and_addresses.get(stop)
+    origination_name = names_and_addresses.get(start_address)
+    destination_name = names_and_addresses.get(stop_address)
+    distance = 0.0
+    start_index = list(names_and_addresses.keys()).index(start_address)
+    stop_index = list(names_and_addresses.keys()).index(stop_address)
 
-    x = next(x for x in stops.get(stop_name) if x[1] == start_name)
+    print(f'start index: {start_index}, stop index: {stop_index}')
 
-    return float(x[0]), stop_name
+    # check where address falls in the list
+    # if stop is after, use stop location to find distance
+    if start_index < stop_index:
+        # get list of stops associated with start
+        # return distance to stop
+        print('find with stop location')
+        print(f'searching {destination_name} adjacency list')
+        distance_list = stops[destination_name]
+
+        for stop in distance_list:
+            if stop[1] == origination_name:
+                distance = stop[0]
+                break
+
+    # if the start is before, then use start location to determine the distance
+    elif start_index > stop_index:
+        # get list of stops associated with the stop
+        # return distance to start
+        print('find with start location.')
+        print(f'searching {origination_name} adjacency list')
+        distance_list = stops[destination_name]
+
+        for stop in distance_list:
+            if stop[1] == destination_name:
+                distance = stop[0]
+
+    return float(distance), destination_name
 
 
 def determine_next_stop(start, list_of_stops):
-    print(f'\n{"*" * 10} finding next stop....')
+    print(f'\n{"*" * 10} finding stop closest to {start}....')
     shortest_distance = 9999
     closest_stop, closest_address = '', ''
 
     for x, stop in enumerate(list_of_stops):
         distance, stop_name = determine_distance(start, stop[1][0])
-        print(f'\t {stop_name} is {distance} away.')
+        print(f'\t{stop_name} is {distance} miles away.')
 
-        if distance < shortest_distance:
+        if distance < shortest_distance and distance != 0.0:
             shortest_distance = distance
             closest_stop = stop_name
             closest_address = stop[1][0]
 
-    print(f'shortest distance : {shortest_distance} miles. '
+    print(f'\tShortest distance: {shortest_distance} miles. '
           f'Next stop is: {closest_stop} ({closest_address}).\n')
 
-    return closest_stop, closest_address
+    return closest_stop, closest_address, shortest_distance
 
 
 def parse_package_file(package_file):
