@@ -1,6 +1,12 @@
 from data_parser import hm
+import math
+
 
 class Truck:
+    """
+    Truck object to track packages on the truck, as well as calculate spoeed
+    and distance traveled.
+    """
 
     def __init__(self):
         self.packages_loaded = []  # list of packages currently on the truck
@@ -27,22 +33,11 @@ class Truck:
         :param package_id:
         :return: none
         """
-        # print('packages on truck before delivery')
-        # for x in self.packages_loaded:
-        #     print('\t', x)
 
         for x, package in enumerate(self.packages_loaded):
             if package[0] == package_id:
                 self.packages_loaded.remove(package)
                 hm.set_delivery_status(package_id, 'Delivered')
-
-                # for z in hm:
-                #     print(z)
-
-                # print('\npackages on truck after delivery')
-                # for y in self.packages_loaded:
-                #     print('\t', y)
-
                 return
 
     def num_packages_loaded(self):
@@ -57,9 +52,12 @@ class Truck:
         Gets travel time in minutes
         Takes distance divided by the constant truck speed which gives time in
         a fraction of an hour. Then multiplies by 60 to get the time in minutes
-        rounded to 2 decimal places.
+        and then 60 again for seconds. Rounded up.
         :param distance: miles to the destination
         :return: travel time in minutes
         """
-        travel_time = (distance / self.TRUCK_SPEED) * 60
-        return round(travel_time, 2)
+        travel_time = (distance / self.TRUCK_SPEED) * 60 * 60
+        travel_minutes = int(travel_time / 60)
+        travel_seconds = int(travel_time % 60)
+
+        return travel_minutes, travel_seconds

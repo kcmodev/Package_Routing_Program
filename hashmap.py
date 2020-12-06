@@ -63,7 +63,7 @@ class HashMap:
 
     def set_delivery_status(self, package_id, status):
         """
-        Takes package id as input to srt delivery status for a package in the
+        Takes package id as input to set delivery status for a package in the
         hashmap
         :param package_id:
         :param status:
