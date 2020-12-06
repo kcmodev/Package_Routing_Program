@@ -1,5 +1,4 @@
 from data_parser import hm
-import math
 
 
 class Truck:

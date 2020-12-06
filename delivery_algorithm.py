@@ -1,5 +1,3 @@
-import math
-
 from delivery_truck import Truck
 import data_parser as data
 import datetime
@@ -7,7 +5,7 @@ import datetime
 STARTING_HUB = 'Salt Lake City UT'
 
 truck_1 = Truck()
-# truck_2 = Truck()
+truck_2 = Truck()
 
 
 def deliver_all_packages():
@@ -20,8 +18,15 @@ def deliver_all_packages():
     # loop to load initial set of packages to start the day
     # and find the first stop to be made based on distance
     for package in data.hm:
-        truck_1.load_package(package)
-        list_of_stops.append(package)  # package destination address
+        # if truck_1.num_packages_loaded() < 16:
+        if truck_1.num_packages_loaded() < 3:
+            truck_1.load_package(package)
+
+        elif truck_2.num_packages_loaded() < 3:
+            truck_2.load_package(package)
+
+        # list of all stops between both trucks
+        list_of_stops.append(package)
         print(f'LOADED: {package}')
 
     # start of day, set starting point to WGU
@@ -32,7 +37,7 @@ def deliver_all_packages():
         print(f'Number of packages left on truck 1:'
               f' {truck_1.num_packages_loaded()}')
 
-        # get the closest stop name, address, distance to the stop from
+        # get truck 1 closest destination name, address, distance,
         # current location, and distance from that stop back to the hub
         next_stop_name, next_stop_address, next_stop_distance, \
             next_stop_hub_distance = \
@@ -91,5 +96,6 @@ def deliver_all_packages():
     print('ALL PACKAGES DELIVERED')
 
     # return truck to hub for more packages
-    print(f'\nTruck 1 traveled {truck_1.miles_traveled} miles total.')
+    print(f'\nTruck 1 traveled '
+          f'{round(truck_1.miles_traveled, 2)} miles total.')
     print(f'Truck 1 returned to HUB at {algorithm_time.time()}')
