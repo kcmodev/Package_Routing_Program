@@ -47,13 +47,15 @@ def deliver_all_packages():
                 list_of_stops.append(package)
 
         # list of all stops between both trucks
-    for x in list_of_stops:
-        print(f'LOADED: {x}')
+    # for x in list_of_stops:
+    #     print(f'LOADED: {x}')
     # start of day, set starting point to WGU
     truck_1.current_location = STARTING_HUB
     truck_2.current_location = STARTING_HUB
 
-    while truck_1.num_packages_loaded() > 0:
+    while truck_1.num_packages_loaded() > 0 \
+            and truck_2.num_packages_loaded() > 0:
+
         print(f'\n\tTruck 1 current location: {truck_1.current_location}')
         print(f'\tNumber of packages left on truck 1:'
               f' {truck_1.num_packages_loaded()}')
@@ -64,15 +66,17 @@ def deliver_all_packages():
 
         # get TRUCK 1 closest destination name, address, distance,
         # current location, and distance from that stop back to the hub
+        print(f'\n{"*" * 10} Finding the next stop for TRUCK 1 {"*" * 10}', end='')
         truck_1_dest_name, truck_1_dest_address, truck_1_dest_distance, \
-        truck_1_dest_hub_distance = \
+            truck_1_dest_hub_distance = \
             data.determine_next_stop(truck_1.current_location,
                                      truck_1.packages_loaded)
 
         # get TRUCK 2 closest destination name, address, distance,
         # current location, and distance from that stop back to the hub
+        print(f'\n{"*" * 10} Finding the next stop for TRUCK 2 {"*" * 10}', end='')
         truck_2_dest_name, truck_2_dest_address, truck_2_dest_distance, \
-        truck_2_dest_hub_distance = \
+            truck_2_dest_hub_distance = \
             data.determine_next_stop(truck_2.current_location,
                                      truck_2.packages_loaded)
 
@@ -81,8 +85,8 @@ def deliver_all_packages():
         truck_2_current_package = data.hm.get_package_id(truck_2_dest_name)
 
         # mark as delivered and remove from TRUCK 1 and TRUCK 2
-        truck_1.deliver_package(truck_1_current_package)
-        truck_2.deliver_package(truck_2_current_package)
+        truck_1.deliver_package(truck_1_current_package, truck_1_dest_address)
+        truck_2.deliver_package(truck_2_current_package, truck_2_dest_address)
 
         truck_1_travel_mins, truck_1_travel_secs = \
             truck_1.calculate_time_traveled(truck_1_dest_distance)
@@ -95,6 +99,8 @@ def deliver_all_packages():
         truck_1_time += datetime.timedelta(
             minutes=truck_1_travel_mins,
             seconds=truck_1_travel_secs)
+
+        print(f'\tTruck 1\'s package delivered at {truck_1_time}\n')
 
         truck_1.miles_traveled += truck_1_dest_distance
         truck_1.current_location = truck_1_dest_address
@@ -111,6 +117,8 @@ def deliver_all_packages():
         truck_2_time += datetime.timedelta(
             minutes=truck_2_travel_mins,
             seconds=truck_2_travel_secs)
+
+        print(f'\tTruck 2\'s package delivered at {truck_2_time}\n')
 
         truck_2.miles_traveled += truck_2_dest_distance
         truck_2.current_location = truck_2_dest_address
@@ -166,15 +174,14 @@ def deliver_all_packages():
             if stop[1][0] == truck_1_dest_address or \
                     stop[1][0] == truck_2_dest_address:
                 list_of_stops.remove(stop)
-                break
 
     print(f'{"~" * 25} ALL PACKAGES DELIVERED {"~" * 25}')
 
     # return truck to hub for more packages
     print(f'\n\tTruck 1 traveled '
           f'{round(truck_1.miles_traveled, 2)} miles total.')
-    print(f'\tTruck 1 returned to HUB at {truck_1_time.time()}')
+    print(f'\tTruck 1 returned to HUB at {truck_1_time}')
 
     print(f'\n\tTruck 2 traveled '
           f'{round(truck_2.miles_traveled, 2)} miles total.')
-    print(f'\tTruck 1 returned to HUB at {truck_2_time.time()}')
+    print(f'\tTruck 1 returned to HUB at {truck_2_time}')

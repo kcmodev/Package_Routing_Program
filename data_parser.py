@@ -145,8 +145,8 @@ def parse_package_file(package_file):
                 hm.__setitem__(package_id, address, deadline, city, zipcode,
                                weight, note)
 
-    for package in hm:
-        print(package)
+    # for package in hm:
+    #     print(package)
 
 
 def package_search(package_id: int):

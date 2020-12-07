@@ -27,20 +27,22 @@ class Truck:
         """
         self.packages_loaded.append(package)
 
-    def deliver_package(self, package_id):
+    def deliver_package(self, package_id, package_address):
         """
         Finds package on the truck and "delivers" it by removing it from the
         list of packages currently on the truck and marking it as delivered
         in the hashmap.
+        :param package_address:
         :param package_id:
         :return: none
         """
 
-        for x, package in enumerate(self.packages_loaded):
-            if package[0] == package_id:
+        # this has to run in reverse to avoid erroneous results resulting from
+        # altering the index of the list while iterating in the normal fashion
+        for package in reversed(self.packages_loaded):
+            if package[0] == package_id or package[1][0] == package_address:
                 self.packages_loaded.remove(package)
                 hm.set_delivery_status(package_id, 'Delivered')
-                return
 
     def num_packages_loaded(self):
         """
