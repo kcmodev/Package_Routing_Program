@@ -4,12 +4,12 @@ import datetime
 
 STARTING_HUB = 'Salt Lake City UT'
 
-truck_1 = Truck()
-truck_2 = Truck()
-
 
 def deliver_all_packages():
     list_of_stops = []
+    truck_1 = Truck()
+    truck_2 = Truck()
+
     # sets starting time to 0800 for the first delivery
     algorithm_time = datetime.datetime(2020, 12, 6, 8, 0, 0)
 
@@ -18,17 +18,24 @@ def deliver_all_packages():
     # loop to load initial set of packages to start the day
     # and find the first stop to be made based on distance
     for package in data.hm:
+        package_id = package[0]
+        package_special_note = package[1][5]
         # if truck_1.num_packages_loaded() < 16:
-        if truck_1.num_packages_loaded() < 3:
+        if truck_1.num_packages_loaded() < 3 \
+                and package_special_note != 'Can only be on truck 2':
             truck_1.load_package(package)
+            data.hm.set_delivery_status(package_id, 'Loaded on Truck 1')
+            list_of_stops.append(package)
 
-        elif truck_2.num_packages_loaded() < 3:
+        elif truck_2.num_packages_loaded() < 3 \
+                and package_special_note != 'Can only be on truck 1':
             truck_2.load_package(package)
+            data.hm.set_delivery_status(package_id, 'Loaded on Truck 2')
+            list_of_stops.append(package)
 
         # list of all stops between both trucks
-        list_of_stops.append(package)
-        print(f'LOADED: {package}')
-
+    for x in list_of_stops:
+        print(f'LOADED: {x}')
     # start of day, set starting point to WGU
     truck_1.current_location = STARTING_HUB
 
@@ -37,11 +44,15 @@ def deliver_all_packages():
         print(f'Number of packages left on truck 1:'
               f' {truck_1.num_packages_loaded()}')
 
-        # get truck 1 closest destination name, address, distance,
+        # get TRUCK 1 closest destination name, address, distance,
         # current location, and distance from that stop back to the hub
         next_stop_name, next_stop_address, next_stop_distance, \
             next_stop_hub_distance = \
-            data.determine_next_stop(truck_1.current_location, list_of_stops)
+            data.determine_next_stop(truck_1.current_location,
+                                     truck_1.packages_loaded)
+
+        # get TRUCK 2 closest destination name, address, distance,
+        # current location, and distance from that stop back to the hub
 
         # get delivery package ID
         delivered_package_id = data.hm.get_package_id(next_stop_name)
