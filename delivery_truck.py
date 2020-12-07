@@ -1,3 +1,5 @@
+import datetime
+
 from data_parser import hm
 
 
@@ -14,6 +16,7 @@ class Truck:
         self.current_location = ''
         self.destination = ''
         self.miles_traveled = 0
+        self.time = datetime.timedelta(hours=8, minutes=0, seconds=0)
 
     def load_package(self, package):
         """
@@ -60,3 +63,4 @@ class Truck:
         travel_seconds = int(travel_time % 60)
 
         return travel_minutes, travel_seconds
+

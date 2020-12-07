@@ -69,7 +69,11 @@ class HashMap:
         :param status:
         :return:
         """
-        self.hashmap[int(package_id) - 1][1][6] = status
+        # self.hashmap[int(package_id) - 1][1][6] = status
+        for x, package in enumerate(self.hashmap):
+            if package[0] == package_id:
+                self.hashmap[x][1][6] = status
+                break
 
     # implements an iterator function for the hashmap class O(n)
     def __iter__(self):
