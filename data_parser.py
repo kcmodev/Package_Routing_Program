@@ -90,7 +90,7 @@ def determine_distance(start_address, stop_address):
 
 
 def determine_next_stop(start, list_of_stops):
-    print(f'\n{"*" * 10} Finding stop closest to {start} {"*" * 10}')
+    # print(f'\n{"*" * 10} Finding stop closest to {start} {"*" * 10}')
     closest_stop_distance = 99999
     closest_stop_hub_distance = 0.0
     closest_stop_name, closest_stop_address = '', ''
@@ -98,7 +98,7 @@ def determine_next_stop(start, list_of_stops):
     for x, stop in enumerate(list_of_stops):
         distance, stop_name, back_to_hub = determine_distance(start,
                                                               stop[1][0])
-        print(f'\t{stop_name} is {distance} miles away.')
+        # print(f'\t{stop_name} is {distance} miles away.')
 
         if distance < closest_stop_distance and distance != 0.0:
             closest_stop_distance = distance

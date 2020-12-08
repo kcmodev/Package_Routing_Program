@@ -17,6 +17,7 @@ def deliver_all_packages():
     truck_2 = Truck()
     last_loaded_index = 0
     status_checker_count = 0
+    counter = 0
 
     # set truck 2 start time to 0905 hrs to account for late packages
     setattr(truck_2, "running_time", datetime.timedelta(hours=9, minutes=5))
@@ -34,18 +35,14 @@ def deliver_all_packages():
     while truck_1.num_packages_loaded() > 0 \
             or truck_2.num_packages_loaded() > 0:
 
-        print(f'\n\tTruck 1 current location: {truck_1.current_location}')
-        print(f'\tNumber of packages left on truck 1:'
-              f' {truck_1.num_packages_loaded()}')
-
-        print(f'\n\tTruck 2 current location: {truck_2.current_location}')
-        print(f'\tNumber of packages left on truck 2:'
-              f' {truck_2.num_packages_loaded()}')
-
         # get TRUCK 1 closest destination name, address, distance,
         # current location, and distance from that stop back to the hub
         if truck_1.num_packages_loaded() > 0:
+            print(f'\n\tTruck 1 current location: {truck_1.current_location}')
+            print(f'\tNumber of packages left on truck 1:'
+                  f' {truck_1.num_packages_loaded()}')
             print(f'\n{"*" * 10} Finding the next stop for TRUCK 1 {"*" * 10}', end='')
+
             truck_1_dest_name, truck_1_dest_address, truck_1_dest_distance, \
             truck_1_dest_hub_distance = \
                 data.determine_next_stop(truck_1.current_location,
@@ -101,6 +98,9 @@ def deliver_all_packages():
         # get TRUCK 2 closest destination name, address, distance,
         # current location, and distance from that stop back to the hub
         if truck_2.num_packages_loaded() > 0:
+            print(f'\n\tTruck 2 current location: {truck_2.current_location}')
+            print(f'\tNumber of packages left on truck 2:'
+                  f' {truck_2.num_packages_loaded()}')
             print(f'\n{"*" * 10} Finding the next stop for TRUCK 2 {"*" * 10}', end='')
             truck_2_dest_name, truck_2_dest_address, truck_2_dest_distance, \
             truck_2_dest_hub_distance = \
@@ -134,7 +134,8 @@ def deliver_all_packages():
 
         # if there are no more packages loaded, return TRUCK 2 to hub and add
         # miles and time traveled
-        elif truck_2.num_packages_loaded() == 0:
+        elif truck_2.num_packages_loaded() == 0 and counter == 0:
+            counter += 1
             print(f'\n{"~" * 10} Truck 2 traveling back to hub for '
                   f'{truck_2_dest_hub_distance} miles. {"~" * 10}')
 
@@ -155,7 +156,6 @@ def deliver_all_packages():
 
     print(f'{"~" * 25} ALL PACKAGES DELIVERED {"~" * 25}')
 
-    # return truck to hub for more packages
     print(f'\n\tTruck 1 traveled '
           f'{round(truck_1.miles_traveled, 2)} miles total.')
     print(f'\tTruck 1 returned to HUB at {truck_1.running_time}')
