@@ -83,6 +83,12 @@ class HashMap:
                 self.hashmap[x][1][5] = note
                 break
 
+    def set_address(self, package_id, address):
+        for x, package in enumerate(self.hashmap):
+            if package[0] == package_id:
+                self.hashmap[x][1][0] = address
+                break
+
     def resize_hashmap(self):
         pass
 

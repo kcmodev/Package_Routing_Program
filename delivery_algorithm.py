@@ -16,9 +16,10 @@ def deliver_all_packages():
     truck_1 = Truck()
     truck_2 = Truck()
     last_loaded_index = 0
+    status_checker_count = 0
 
     # set truck 2 start time to 0905 hrs to account for late packages
-    setattr(truck_2, "time", datetime.timedelta(hours=9, minutes=5))
+    setattr(truck_2, "running_time", datetime.timedelta(hours=9, minutes=5))
 
     print(f'TRUCK 1 STARTING TIME: {truck_1.running_time}')
     print(f'TRUCK 2 STARTING TIME: {truck_2.running_time}\n')
@@ -33,15 +34,12 @@ def deliver_all_packages():
     while truck_1.num_packages_loaded() > 0 \
             or truck_2.num_packages_loaded() > 0:
 
-        # if truck_1.running_time >= datetime.time(10, 20, 0) or truck_2.running_time >= \
-        #         datetime.time(10, 20, 0):
-
         print(f'\n\tTruck 1 current location: {truck_1.current_location}')
         print(f'\tNumber of packages left on truck 1:'
               f' {truck_1.num_packages_loaded()}')
 
         print(f'\n\tTruck 2 current location: {truck_2.current_location}')
-        print(f'\tNumber of packages left on truck 1:'
+        print(f'\tNumber of packages left on truck 2:'
               f' {truck_2.num_packages_loaded()}')
 
         # get TRUCK 1 closest destination name, address, distance,
@@ -49,7 +47,7 @@ def deliver_all_packages():
         if truck_1.num_packages_loaded() > 0:
             print(f'\n{"*" * 10} Finding the next stop for TRUCK 1 {"*" * 10}', end='')
             truck_1_dest_name, truck_1_dest_address, truck_1_dest_distance, \
-                truck_1_dest_hub_distance = \
+            truck_1_dest_hub_distance = \
                 data.determine_next_stop(truck_1.current_location,
                                          truck_1.packages_loaded)
 
@@ -73,8 +71,7 @@ def deliver_all_packages():
                   f'is {truck_1_travel_mins} minutes and '
                   f'{truck_1_travel_secs} seconds')
 
-
-            print(f'\tTruck 1\'s package delivered at {truck_1.running_time}\n')
+            print(f'\tTruck 1\'s package delivered at {truck_1.running_time}')
 
             truck_1.miles_traveled += truck_1_dest_distance
             truck_1.current_location = truck_1_dest_address
@@ -106,7 +103,7 @@ def deliver_all_packages():
         if truck_2.num_packages_loaded() > 0:
             print(f'\n{"*" * 10} Finding the next stop for TRUCK 2 {"*" * 10}', end='')
             truck_2_dest_name, truck_2_dest_address, truck_2_dest_distance, \
-                truck_2_dest_hub_distance = \
+            truck_2_dest_hub_distance = \
                 data.determine_next_stop(truck_2.current_location,
                                          truck_2.packages_loaded)
 
@@ -130,7 +127,7 @@ def deliver_all_packages():
                   f'is {truck_2_travel_mins} minutes and '
                   f'{truck_2_travel_secs} seconds')
 
-            print(f'\tTruck 2\'s package delivered at {truck_2.running_time}\n')
+            print(f'\tTruck 2\'s package delivered at {truck_2.running_time}')
 
             truck_2.miles_traveled += truck_2_dest_distance
             truck_2.current_location = truck_2_dest_address
@@ -167,9 +164,11 @@ def deliver_all_packages():
           f'{round(truck_2.miles_traveled, 2)} miles total.')
     print(f'\tTruck 1 returned to HUB at {truck_2.running_time}')
 
+
+def display_all_packages_status(time):
     print()
     data.print_line_break()
-    print('DISPLAYING ALL PACKAGES')
+    print(f'DISPLAYING ALL PACKAGES for the time {time}')
     data.print_line_break()
 
     for item in data.hm:
@@ -204,8 +203,7 @@ def load_truck(truck, truck_num, starting_index):
         elif package_special_note == 'Wrong address listed':
             if truck.running_time >= datetime.timedelta(hours=10, minutes=20):
                 data.hm.set_special_note(package_id, 'Address corrected')
-                data.hm.set_delivery_status(package_id,
-                                            f'Loaded on Truck {truck_num}')
+                data.hm.set_address(package_id, f'410 S State St')
                 truck.load_package(package)
                 index_counter += 1
 

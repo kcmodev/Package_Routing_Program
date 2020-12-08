@@ -90,7 +90,7 @@ def determine_distance(start_address, stop_address):
 
 
 def determine_next_stop(start, list_of_stops):
-    print(f'\n{"*" * 10} finding stop closest to {start} {"*" * 10}')
+    print(f'\n{"*" * 10} Finding stop closest to {start} {"*" * 10}')
     closest_stop_distance = 99999
     closest_stop_hub_distance = 0.0
     closest_stop_name, closest_stop_address = '', ''
@@ -143,10 +143,6 @@ def parse_package_file(package_file):
 
                 hm.__setitem__(package_id, address, deadline, city, zipcode,
                                weight, note)
-
-
-def package_search(package_id: int):
-    pass
 
 
 def get_address_from_name(address):
