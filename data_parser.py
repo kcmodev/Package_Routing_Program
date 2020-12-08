@@ -64,7 +64,6 @@ def determine_distance(start_address, stop_address):
 
     # check where address falls in the list
     # if stop is after, use stop location to find distance
-
     if origination_index < destination_index:
         # use list of stops distance associated with the destination
         # return distance to destination from destination list
@@ -145,31 +144,9 @@ def parse_package_file(package_file):
                 hm.__setitem__(package_id, address, deadline, city, zipcode,
                                weight, note)
 
-    # for package in hm:
-    #     print(package)
-
 
 def package_search(package_id: int):
-    """
-    Takes in package ID and returns all package data.
-    :param package_id:
-    :return: Package information
-    """
-    try:
-        if package_id > 0:
-            if package_id - 1 < len(hm):
-                print_line_break()
-                print()
-                print(f'Package ID #{package_id} information:\n')
-                print(hm.__getitem__(package_id - 1))
-                print()
-            else:
-                raise ValueError
-        else:
-            raise ValueError
-
-    except ValueError:
-        print(f'"{package_id}" is not a valid selection.')
+    pass
 
 
 def get_address_from_name(address):

@@ -6,7 +6,8 @@ class HashMap:
     def __init__(self):
         self.hashmap = []
 
-    # method inserts an item into the hashmap - O(1)
+    # method serves at the insertion function
+    # appends an item onto the hashmap - O(1)
     # automatically appends new packages to the end of the hashmap with a
     # generated package id making this data structure self-adjusting
     def __setitem__(self, package_id, address, deadline, city, zipcode,
@@ -37,6 +38,7 @@ class HashMap:
                 special_note,
                 delivery_status
             ]])
+
         # user entering a new package into the list
         # add functionality later to enable entering of special notes
         else:
@@ -74,6 +76,9 @@ class HashMap:
             if package[0] == package_id:
                 self.hashmap[x][1][6] = status
                 break
+
+    def resize_hashmap(self):
+        pass
 
     # implements an iterator function for the hashmap class O(n)
     def __iter__(self):

@@ -13,48 +13,28 @@ def deliver_all_packages():
     heading to the closest stop first.
     :return:
     """
-    # list_of_stops = []
     truck_1 = Truck()
     truck_2 = Truck()
+    last_loaded_index = 0
 
     # set truck 2 start time to 0905 hrs to account for late packages
     setattr(truck_2, "time", datetime.timedelta(hours=9, minutes=5))
 
-    # create variables for truck 1 and truck 2 times
-    truck_1_time = getattr(truck_1, "time")
-    truck_2_time = getattr(truck_2, "time")
+    print(f'TRUCK 1 STARTING TIME: {truck_1.running_time}')
+    print(f'TRUCK 2 STARTING TIME: {truck_2.running_time}\n')
 
-    print(f'TRUCK 1 STARTING TIME: {truck_1_time}')
-    print(f'TRUCK 2 STARTING TIME: {truck_2_time}\n')
+    last_loaded_index += load_truck(truck_1, 1, last_loaded_index)
+    last_loaded_index += load_truck(truck_2, 2, last_loaded_index)
 
-    # loop to load initial set of packages to start the day
-    # and find the first stop to be made based on distance
-    for package in data.hm:
-        package_id = package[0]
-        package_special_note = package[1][5]
-
-        if package_special_note != 'Wrong address listed':
-            if truck_1.num_packages_loaded() < 16 \
-                    and package_special_note != 'Can only be on truck 2':
-                data.hm.set_delivery_status(package_id, 'Loaded on Truck 1')
-                truck_1.load_package(package)
-                # list_of_stops.append(package)
-
-            elif truck_2.num_packages_loaded() < 16 \
-                    and package_special_note != 'Can only be on truck 1':
-                data.hm.set_delivery_status(package_id, 'Loaded on Truck 2')
-                truck_2.load_package(package)
-                # list_of_stops.append(package)
-
-        # list of all stops between both trucks
-    # for x in list_of_stops:
-    #     print(f'LOADED: {x}')
     # start of day, set starting point to WGU
     truck_1.current_location = STARTING_HUB
     truck_2.current_location = STARTING_HUB
 
     while truck_1.num_packages_loaded() > 0 \
             or truck_2.num_packages_loaded() > 0:
+
+        # if truck_1.running_time >= datetime.time(10, 20, 0) or truck_2.running_time >= \
+        #         datetime.time(10, 20, 0):
 
         print(f'\n\tTruck 1 current location: {truck_1.current_location}')
         print(f'\tNumber of packages left on truck 1:'
@@ -73,25 +53,28 @@ def deliver_all_packages():
                 data.determine_next_stop(truck_1.current_location,
                                          truck_1.packages_loaded)
 
+            # get truck travel time
+            truck_1_travel_mins, truck_1_travel_secs = \
+                truck_1.calculate_time_traveled(truck_1_dest_distance)
+
+            # adjust truck running time
+            truck_1.track_time(truck_1_travel_mins, truck_1_travel_secs)
+
             # get delivery package ID
             truck_1_current_package = data.hm.get_package_id(truck_1_dest_name)
 
             # mark as delivered and remove from TRUCK 1
-            truck_1.deliver_package(truck_1_current_package, truck_1_dest_address)
-
-            truck_1_travel_mins, truck_1_travel_secs = \
-                truck_1.calculate_time_traveled(truck_1_dest_distance)
+            truck_1.deliver_package(truck_1_current_package,
+                                    truck_1_dest_address,
+                                    1, truck_1.running_time)
 
             print(f'\tTime for Truck 1 to travel from {truck_1.current_location} '
                   f'to {truck_1_dest_address} ({truck_1_dest_distance} miles) '
                   f'is {truck_1_travel_mins} minutes and '
                   f'{truck_1_travel_secs} seconds')
 
-            truck_1_time += datetime.timedelta(
-                minutes=truck_1_travel_mins,
-                seconds=truck_1_travel_secs)
 
-            print(f'\tTruck 1\'s package delivered at {truck_1_time}\n')
+            print(f'\tTruck 1\'s package delivered at {truck_1.running_time}\n')
 
             truck_1.miles_traveled += truck_1_dest_distance
             truck_1.current_location = truck_1_dest_address
@@ -113,10 +96,10 @@ def deliver_all_packages():
                   f'{truck_1_travel_secs} seconds\n')
 
             truck_1.current_location = STARTING_HUB
+            truck_1.track_time(truck_1_travel_mins, truck_1_travel_secs)
 
-            truck_1_time += datetime.timedelta(
-                minutes=truck_1_travel_mins,
-                seconds=truck_1_travel_secs)
+            # reload truck 1 with the remaining packages for the day
+            load_truck(truck_1, 1, last_loaded_index)
 
         # get TRUCK 2 closest destination name, address, distance,
         # current location, and distance from that stop back to the hub
@@ -127,26 +110,27 @@ def deliver_all_packages():
                 data.determine_next_stop(truck_2.current_location,
                                          truck_2.packages_loaded)
 
+            # mark as delivered and remove from TRUCK 2
+            truck_2_travel_mins, truck_2_travel_secs = \
+                truck_2.calculate_time_traveled(truck_2_dest_distance)
+
+            # adjust truck running time
+            truck_2.track_time(truck_2_travel_mins, truck_2_travel_secs)
+
             # get delivery package ID
             truck_2_current_package = data.hm.get_package_id(truck_2_dest_name)
 
             # mark as delivered and remove from TRUCK 2
-            truck_2.deliver_package(truck_2_current_package, truck_2_dest_address)
-
-            # mark as delivered and remove from TRUCK 2
-            truck_2_travel_mins, truck_2_travel_secs = \
-                truck_2.calculate_time_traveled(truck_2_dest_distance)
+            truck_2.deliver_package(truck_2_current_package,
+                                    truck_2_dest_address,
+                                    2, truck_2.running_time)
 
             print(f'\tTime for Truck 2 to travel from {truck_2.current_location} '
                   f'to {truck_2_dest_address} ({truck_2_dest_distance} miles) '
                   f'is {truck_2_travel_mins} minutes and '
                   f'{truck_2_travel_secs} seconds')
 
-            truck_2_time += datetime.timedelta(
-                minutes=truck_2_travel_mins,
-                seconds=truck_2_travel_secs)
-
-            print(f'\tTruck 2\'s package delivered at {truck_2_time}\n')
+            print(f'\tTruck 2\'s package delivered at {truck_2.running_time}\n')
 
             truck_2.miles_traveled += truck_2_dest_distance
             truck_2.current_location = truck_2_dest_address
@@ -170,24 +154,57 @@ def deliver_all_packages():
 
             truck_2.current_location = STARTING_HUB
 
-            truck_2_time += datetime.timedelta(
-                minutes=truck_2_travel_mins,
-                seconds=truck_2_travel_secs)
-
-        # remove stop from list of packages that need to be delivered if it is
-        # a package in either TRUCK 1 or TRUCK 2
-        # for stop in list_of_stops:
-        #     if stop[1][0] == truck_1_dest_address or \
-        #             stop[1][0] == truck_2_dest_address:
-        #         list_of_stops.remove(stop)
+            truck_2.track_time(truck_2_travel_mins, truck_2_travel_secs)
 
     print(f'{"~" * 25} ALL PACKAGES DELIVERED {"~" * 25}')
 
     # return truck to hub for more packages
     print(f'\n\tTruck 1 traveled '
           f'{round(truck_1.miles_traveled, 2)} miles total.')
-    print(f'\tTruck 1 returned to HUB at {truck_1_time}')
+    print(f'\tTruck 1 returned to HUB at {truck_1.running_time}')
 
     print(f'\n\tTruck 2 traveled '
           f'{round(truck_2.miles_traveled, 2)} miles total.')
-    print(f'\tTruck 1 returned to HUB at {truck_2_time}')
+    print(f'\tTruck 1 returned to HUB at {truck_2.running_time}')
+
+    print()
+    data.print_line_break()
+    print('DISPLAYING ALL PACKAGES')
+    data.print_line_break()
+
+    for item in data.hm:
+        print(f'\t{item}')
+
+    data.print_line_break()
+    print()
+
+
+def load_truck(truck, truck_num, starting_index):
+    index_counter = 0
+
+    # start at last loaded index to avoid looping through the entire hashmap every time
+    for x in range(starting_index, len(data.hm)):
+        package = data.hm[x]
+        package_id = package[0]
+        package_special_note = package[1][5]
+        # package_truck_limitation = package[1][5][-1]
+        package_delivery_status = package[1][6]
+
+        if package_special_note != 'Wrong address listed' \
+                and not package_delivery_status.__contains__('delivered'.casefold()):
+
+            # for y in range(1, (truck_num + 1)):
+            if truck.num_packages_loaded() < 16:
+                data.hm.set_delivery_status(package_id,
+                                            f'Loaded on Truck {truck_num}')
+                truck.load_package(package)
+                index_counter += 1
+
+            if truck.num_packages_loaded() == 16:
+                break
+
+        elif package_special_note == 'Wrong address listed':
+            if truck.running_time >= datetime.timedelta(10, 20, 0):
+                setattr(package, 'special_note', 'Address corrected')
+
+    return index_counter

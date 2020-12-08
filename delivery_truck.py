@@ -5,7 +5,7 @@ from data_parser import hm
 
 class Truck:
     """
-    Truck object to track packages on the truck, as well as calculate spoeed
+    Truck object to track packages on the truck, as well as calculate speed
     and distance traveled.
     """
 
@@ -16,7 +16,7 @@ class Truck:
         self.current_location = ''
         self.destination = ''
         self.miles_traveled = 0
-        self.time = datetime.timedelta(hours=8, minutes=0, seconds=0)
+        self.running_time = datetime.timedelta(hours=8, minutes=0, seconds=0)
 
     def load_package(self, package):
         """
@@ -27,11 +27,13 @@ class Truck:
         """
         self.packages_loaded.append(package)
 
-    def deliver_package(self, package_id, package_address):
+    def deliver_package(self, package_id, package_address, truck_num, delivery_time):
         """
         Finds package on the truck and "delivers" it by removing it from the
         list of packages currently on the truck and marking it as delivered
         in the hashmap.
+        :param delivery_time:
+        :param truck_num:
         :param package_address:
         :param package_id:
         :return: none
@@ -42,7 +44,8 @@ class Truck:
         for package in reversed(self.packages_loaded):
             if package[0] == package_id or package[1][0] == package_address:
                 self.packages_loaded.remove(package)
-                hm.set_delivery_status(package_id, 'Delivered')
+                hm.set_delivery_status(package[0], f'Delivered by Truck {truck_num} at '
+                                                   f'{delivery_time}')
 
     def num_packages_loaded(self):
         """
@@ -66,3 +69,5 @@ class Truck:
 
         return travel_minutes, travel_seconds
 
+    def track_time(self, travel_mins, travel_secs):
+        self.running_time += datetime.timedelta(minutes=travel_mins, seconds=travel_secs)
