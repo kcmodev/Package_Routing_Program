@@ -208,7 +208,8 @@ def load_truck(truck, truck_num, starting_index):
 
             if truck.num_packages_loaded() < 16:
                 data.hm.set_delivery_status(package_id,
-                                            f'Loaded on Truck {truck_num}')
+                                            f'Loaded on Truck {truck_num} '
+                                            f'at {truck.running_time}')
                 truck.load_package(package)
                 index_counter += 1
 

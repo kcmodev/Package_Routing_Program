@@ -49,26 +49,35 @@ def parse_distance_table():
             stops[f'{start_name}'] = stops_list
 
 
-def determine_distance(start_address, stop_address):
+def determine_distance(origination_address, destination_address):
+    """
+    Uses the origination and destination addresses to determine the shortest stop relative
+    to the truck's current location.
+    :param origination_address:
+    :param destination_address:
+    :return:
+    """
     distance, back_to_hub = 0.0, 0.0
 
-    # use stop name as key
-    # search list of stops for corresponding value
-    origination_name = names_and_addresses.get(start_address)
-    destination_name = names_and_addresses.get(stop_address)
+    # retrieve values of keys for corresponding destination addresses O(1)
+    origination_name = names_and_addresses.get(origination_address)
+    destination_name = names_and_addresses.get(destination_address)
 
-    origination_index = list(names_and_addresses.keys()).index(start_address)
-    destination_index = list(names_and_addresses.keys()).index(stop_address)
+    # retrieve the index of each name to determine how to search the distance table O(n)
+    origination_index = list(names_and_addresses.keys()).index(origination_address)
+    destination_index = list(names_and_addresses.keys()).index(destination_address)
 
+    # retrieve the respective distance table lines from the stops dict O(1)
     origination_distance_list = stops[origination_name]
     destination_distance_list = stops[destination_name]
 
     # check where address falls in the list
-    # if stop is after, use stop location to find distance
+    # if destination is after, use destination location to find the travel distance
     if origination_index < destination_index:
-        # use list of stops distance associated with the destination
-        # return distance to destination from destination list
 
+        # return distance to destination from destination list
+        # breaks after a match is found to avoid searching the entire list
+        # unless necessary
         for stop in destination_distance_list:
             if stop[1] == origination_name:
                 distance = float(stop[0])
@@ -76,35 +85,48 @@ def determine_distance(start_address, stop_address):
                 back_to_hub = float(destination_distance_list[0][0])
                 break
 
-    # if the start is before, then use start location to determine the distance
+    # if the destination is before origination in the distance table
+    # then use origination location to determine the distance
     elif origination_index > destination_index:
-        # get list of stops distance associated with the trip origination
-        # return distance to destination from origination list
 
+        # return distance to destination from origination list
+        # breaks after a match is found to avoid searching the entire list
+        # unless necessary
         for stop in origination_distance_list:
             if stop[1] == destination_name:
                 distance = float(stop[0])
+                # saves distance from destination to hub
                 back_to_hub = float(destination_distance_list[0][0])
                 break
 
     return distance, destination_name, back_to_hub
 
 
-def determine_next_stop(start, list_of_stops):
+def determine_next_stop(start, all_packages_loaded):
+    """
+    Determines the trucks closest stop and returns the result as the truck's next stop.
+    :param start:
+    :param all_packages_loaded:
+    :return:
+    """
     # print(f'\n{"*" * 10} Finding stop closest to {start} {"*" * 10}')
     closest_stop_distance = 99999
     closest_stop_hub_distance = 0.0
     closest_stop_name, closest_stop_address = '', ''
 
-    for stop in list_of_stops:
+    # iterate through the packages on the truck and determine the destination
+    # closest to the origination
+    for package in all_packages_loaded:
         distance, stop_name, back_to_hub = determine_distance(start,
-                                                              stop[1][0])
+                                                              package[1][0])
         # print(f'\t{stop_name} is {distance} miles away.')
 
+        # when shortest is found save distance, name, address, and distance back to hub
+        # when the end of the route is reached
         if distance < closest_stop_distance and distance != 0.0:
             closest_stop_distance = distance
             closest_stop_name = stop_name
-            closest_stop_address = stop[1][0]
+            closest_stop_address = package[1][0]
             closest_stop_hub_distance = back_to_hub
 
     print(f'\n\tShortest distance: {closest_stop_distance} miles. '

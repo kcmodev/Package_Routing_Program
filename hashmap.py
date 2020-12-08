@@ -8,8 +8,7 @@ class HashMap:
 
     # method serves at the insertion function
     # appends an item onto the hashmap - O(1)
-    # automatically appends new packages to the end of the hashmap with a
-    # generated package id making this data structure self-adjusting
+    # automatically appends new packages to the end of the hashmap
     def __setitem__(self, package_id, address, deadline, city, zipcode,
                     weight, special_note=None, delivery_status='At the hub',
                     new_package=False):
@@ -26,35 +25,15 @@ class HashMap:
         :param delivery_status:
         :return:
         """
-
-        # not a new package, used for initializing the hashmap
-        if new_package is False:
-            self.hashmap.append([package_id, [
-                address,
-                deadline,
-                city,
-                zipcode,
-                weight,
-                special_note,
-                delivery_status
-            ]])
-
-        # user entering a new package into the list
-        # add functionality later to enable entering of special notes
-        else:
-            # uses length of the list to determine the next available number
-            # for the package ID
-            # could add function later to remove unused package numbers and
-            # append packages to the spaces in the list
-            self.hashmap.append([(len(self.hashmap) + 1), [
-                address,
-                deadline,
-                city,
-                zipcode,
-                weight,
-                special_note,
-                delivery_status
-            ]])
+        self.hashmap.append([package_id, [
+            address,
+            deadline,
+            city,
+            zipcode,
+            weight,
+            special_note,
+            delivery_status
+        ]])
 
     # look-up function
     # returns an item from the hashmap - O(n)
@@ -89,8 +68,16 @@ class HashMap:
                 self.hashmap[x][1][0] = address
                 break
 
-    def resize_hashmap(self):
-        pass
+    def resize_hashmap(self, num_to_add):
+        """
+        Resizes the hashmap by appending blank entries to the end of the list. The
+        number of additional spaces would be determined by the user and would be
+        initialized with None. O(n).
+        :return:
+        """
+
+        for num in num_to_add:
+            self.hashmap.append(None)
 
     # implements an iterator function for the hashmap class O(n)
     def __iter__(self):
