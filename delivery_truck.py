@@ -15,6 +15,8 @@ class Truck:
         self.TRUCK_SPEED = 18  # static truck speed is 18 mph
         self.current_location = ''
         self.destination = ''
+        self.destination_distance = 0.0
+        self.destination_hub_distance = 0.0
         self.miles_traveled = 0
         self.running_time = datetime.timedelta(hours=8, minutes=0, seconds=0)
 
