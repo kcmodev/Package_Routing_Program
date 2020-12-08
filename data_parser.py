@@ -1,4 +1,6 @@
 import csv
+import datetime
+
 from hashmap import HashMap
 
 hm = HashMap()
@@ -89,13 +91,17 @@ def determine_distance(start_address, stop_address):
     return distance, destination_name, back_to_hub
 
 
-def determine_next_stop(start, list_of_stops):
+def determine_next_stop(start, list_of_stops, current_time):
     # print(f'\n{"*" * 10} Finding stop closest to {start} {"*" * 10}')
     closest_stop_distance = 99999
     closest_stop_hub_distance = 0.0
     closest_stop_name, closest_stop_address = '', ''
 
-    for x, stop in enumerate(list_of_stops):
+    for stop in list_of_stops:
+        # stop_hours = stop[1][1][0:3]
+        # stop_mins = stop[1][1][3:5]
+        # stop_deadline = datetime.timedelta(hours=stop_hours, minutes=stop_mins)
+
         distance, stop_name, back_to_hub = determine_distance(start,
                                                               stop[1][0])
         # print(f'\t{stop_name} is {distance} miles away.')

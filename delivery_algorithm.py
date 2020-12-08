@@ -38,15 +38,15 @@ def deliver_all_packages():
         # get TRUCK 1 closest destination name, address, distance,
         # current location, and distance from that stop back to the hub
         if truck_1.num_packages_loaded() > 0:
-            print(f'\n\tTruck 1 current location: {truck_1.current_location}')
-            print(f'\tNumber of packages left on truck 1:'
-                  f' {truck_1.num_packages_loaded()}')
+            # print(f'\n\tTruck 1 current location: {truck_1.current_location}')
+            # print(f'\tNumber of packages left on truck 1:'
+            #       f' {truck_1.num_packages_loaded()}')
             print(f'\n{"*" * 10} Finding the next stop for TRUCK 1 {"*" * 10}', end='')
 
             truck_1_dest_name, truck_1_dest_address, truck_1_dest_distance, \
-            truck_1_dest_hub_distance = \
+                truck_1_dest_hub_distance = \
                 data.determine_next_stop(truck_1.current_location,
-                                         truck_1.packages_loaded)
+                                         truck_1.packages_loaded, truck_1.running_time)
 
             # get truck travel time
             truck_1_travel_mins, truck_1_travel_secs = \
@@ -68,7 +68,7 @@ def deliver_all_packages():
                   f'is {truck_1_travel_mins} minutes and '
                   f'{truck_1_travel_secs} seconds')
 
-            print(f'\tTruck 1\'s package delivered at {truck_1.running_time}')
+            # print(f'\tTruck 1\'s package delivered at {truck_1.running_time}')
 
             truck_1.miles_traveled += truck_1_dest_distance
             truck_1.current_location = truck_1_dest_address
@@ -98,14 +98,14 @@ def deliver_all_packages():
         # get TRUCK 2 closest destination name, address, distance,
         # current location, and distance from that stop back to the hub
         if truck_2.num_packages_loaded() > 0:
-            print(f'\n\tTruck 2 current location: {truck_2.current_location}')
-            print(f'\tNumber of packages left on truck 2:'
-                  f' {truck_2.num_packages_loaded()}')
+            # print(f'\n\tTruck 2 current location: {truck_2.current_location}')
+            # print(f'\tNumber of packages left on truck 2:'
+            #       f' {truck_2.num_packages_loaded()}')
             print(f'\n{"*" * 10} Finding the next stop for TRUCK 2 {"*" * 10}', end='')
             truck_2_dest_name, truck_2_dest_address, truck_2_dest_distance, \
-            truck_2_dest_hub_distance = \
+                truck_2_dest_hub_distance = \
                 data.determine_next_stop(truck_2.current_location,
-                                         truck_2.packages_loaded)
+                                         truck_2.packages_loaded, truck_2.running_time)
 
             # mark as delivered and remove from TRUCK 2
             truck_2_travel_mins, truck_2_travel_secs = \
@@ -127,7 +127,7 @@ def deliver_all_packages():
                   f'is {truck_2_travel_mins} minutes and '
                   f'{truck_2_travel_secs} seconds')
 
-            print(f'\tTruck 2\'s package delivered at {truck_2.running_time}')
+            # print(f'\tTruck 2\'s package delivered at {truck_2.running_time}')
 
             truck_2.miles_traveled += truck_2_dest_distance
             truck_2.current_location = truck_2_dest_address
@@ -164,8 +164,10 @@ def deliver_all_packages():
           f'{round(truck_2.miles_traveled, 2)} miles total.')
     print(f'\tTruck 1 returned to HUB at {truck_2.running_time}')
 
+    display_all_packages_status()
 
-def display_all_packages_status(time):
+
+def display_all_packages_status(time=None):
     print()
     data.print_line_break()
     print(f'DISPLAYING ALL PACKAGES for the time {time}')
@@ -173,6 +175,18 @@ def display_all_packages_status(time):
 
     for item in data.hm:
         print(f'\t{item}')
+
+    data.print_line_break()
+    print('\n\n')
+
+    print()
+    data.print_line_break()
+    print(f'DISPLAYING ALL PACKAGES for the time {time}')
+    data.print_line_break()
+
+    for item in data.hm:
+        if item[1][1] != 'EOD':
+            print(f'\t{item}')
 
     data.print_line_break()
     print('\n\n')
