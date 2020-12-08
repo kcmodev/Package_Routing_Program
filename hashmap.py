@@ -71,10 +71,16 @@ class HashMap:
         :param status:
         :return:
         """
-        # self.hashmap[int(package_id) - 1][1][6] = status
+
         for x, package in enumerate(self.hashmap):
             if package[0] == package_id:
                 self.hashmap[x][1][6] = status
+                break
+
+    def set_special_note(self, package_id, note):
+        for x, package in enumerate(self.hashmap):
+            if package[0] == package_id:
+                self.hashmap[x][1][5] = note
                 break
 
     def resize_hashmap(self):

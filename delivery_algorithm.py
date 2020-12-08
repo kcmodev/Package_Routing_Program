@@ -176,7 +176,7 @@ def deliver_all_packages():
         print(f'\t{item}')
 
     data.print_line_break()
-    print()
+    print('\n\n')
 
 
 def load_truck(truck, truck_num, starting_index):
@@ -187,13 +187,11 @@ def load_truck(truck, truck_num, starting_index):
         package = data.hm[x]
         package_id = package[0]
         package_special_note = package[1][5]
-        # package_truck_limitation = package[1][5][-1]
         package_delivery_status = package[1][6]
 
         if package_special_note != 'Wrong address listed' \
-                and not package_delivery_status.__contains__('delivered'.casefold()):
+                and not package_delivery_status.__contains__('delivered'):
 
-            # for y in range(1, (truck_num + 1)):
             if truck.num_packages_loaded() < 16:
                 data.hm.set_delivery_status(package_id,
                                             f'Loaded on Truck {truck_num}')
@@ -204,7 +202,11 @@ def load_truck(truck, truck_num, starting_index):
                 break
 
         elif package_special_note == 'Wrong address listed':
-            if truck.running_time >= datetime.timedelta(10, 20, 0):
-                setattr(package, 'special_note', 'Address corrected')
+            if truck.running_time >= datetime.timedelta(hours=10, minutes=20):
+                data.hm.set_special_note(package_id, 'Address corrected')
+                data.hm.set_delivery_status(package_id,
+                                            f'Loaded on Truck {truck_num}')
+                truck.load_package(package)
+                index_counter += 1
 
     return index_counter
