@@ -17,6 +17,8 @@ def deliver_all_packages():
     truck_2 = Truck()
     last_loaded_index = 0
     status_checker_count = 0
+    print_1, print_2, print_3 = False, False, False
+    # package_checker_count = 1
 
     # set truck 2 start time to 0905 hrs to account for late packages
     setattr(truck_2, "running_time", datetime.timedelta(hours=9, minutes=5))
@@ -29,12 +31,27 @@ def deliver_all_packages():
     last_loaded_index += load_truck(truck_1, 1, last_loaded_index)
     last_loaded_index += load_truck(truck_2, 2, last_loaded_index)
 
-    # start of day, set starting point to WGU
+    # Start of day, set starting point to WGU.
     truck_1.current_location = STARTING_HUB
     truck_2.current_location = STARTING_HUB
 
     while truck_1.num_packages_loaded() > 0 \
             or truck_2.num_packages_loaded() > 0:
+
+        if datetime.timedelta(hours=8, minutes=35) < truck_1.running_time < \
+                datetime.timedelta(hours=9, minutes=25) and not print_1:
+            print_1 = True
+            display_all_packages_status(print_1, print_2, print_3, truck_1.running_time)
+
+        elif datetime.timedelta(hours=9, minutes=35) < truck_1.running_time < \
+                datetime.timedelta(hours=10, minutes=25) and not print_2:
+            print_2 = True
+            display_all_packages_status(print_1, print_2, print_3, truck_1.running_time)
+
+        elif datetime.timedelta(hours=9, minutes=35) < truck_1.running_time < \
+                datetime.timedelta(hours=10, minutes=25) and not print_3:
+            print_3 = True
+            display_all_packages_status(print_1, print_2, print_3, truck_1.running_time)
 
         # get TRUCK 1 closest destination name, address, distance,
         # current location, and distance from that stop back to the hub
@@ -45,7 +62,7 @@ def deliver_all_packages():
             print(f'\n{"*" * 10} Finding the next stop for TRUCK 1 {"*" * 10}', end='')
 
             truck_1_dest_name, truck_1_dest_address, truck_1_dest_distance, \
-                truck_1_dest_hub_distance = \
+            truck_1_dest_hub_distance = \
                 data.determine_next_stop(truck_1.current_location,
                                          truck_1.packages_loaded)
 
@@ -111,7 +128,7 @@ def deliver_all_packages():
             #       f' {truck_2.num_packages_loaded()}')
             print(f'\n{"*" * 10} Finding the next stop for TRUCK 2 {"*" * 10}', end='')
             truck_2_dest_name, truck_2_dest_address, truck_2_dest_distance, \
-                truck_2_dest_hub_distance = \
+            truck_2_dest_hub_distance = \
                 data.determine_next_stop(truck_2.current_location,
                                          truck_2.packages_loaded)
 
@@ -162,12 +179,6 @@ def deliver_all_packages():
 
             truck_2.track_time(truck_2_travel_mins, truck_2_travel_secs)
 
-    # if time_check(truck_1) or time_check(truck_2):
-    #     if truck_1.running_time > truck_2.running_time:
-    #         display_all_packages_status(truck_1.running_time)
-    #     else:
-    #         display_all_packages_status(truck_2.running_time)
-
     print(f'{"~" * 25} ALL PACKAGES DELIVERED {"~" * 25}')
 
     print(f'\n\tTruck 1 traveled '
@@ -178,32 +189,49 @@ def deliver_all_packages():
           f'{round(truck_2.miles_traveled, 2)} miles total.')
     print(f'\tTruck 1 returned to HUB at {truck_2.running_time}')
 
-    display_all_packages_status()
+    # display_all_packages_status()
 
 
-def display_all_packages_status(time=None):
-    print()
-    data.print_line_break()
-    print(f'DISPLAYING ALL PACKAGES for the time {time}')
-    data.print_line_break()
+def display_all_packages_status(time_1, time_2, time_3, time=None):
+    if time_1:
+        data.print_line_break()
+        print(f'DISPLAYING ALL PACKAGES for the time {time}. Falling between 8:35 and '
+              f'9:25')
+        data.print_line_break()
+
+    elif time_1 and time_2:
+        data.print_line_break()
+        print(f'DISPLAYING ALL PACKAGES for the time {time}. Falling between 9:35 and '
+              f'10:25')
+        data.print_line_break()
+
+    elif time_1 and time_2 and time_3:
+        data.print_line_break()
+        print(f'DISPLAYING ALL PACKAGES for the time {time}. Falling between 12:03 and '
+              f'13:12 (1:12 pm)')
+        data.print_line_break()
+
+    else:
+        return
 
     for item in data.hm:
         print(f'\t{item}')
 
-    data.print_line_break()
-    print('\n\n')
+    # data.print_line_break()
+    # print('\n\n')
+    #
+    # print()
+    # data.print_line_break()
 
-    print()
-    data.print_line_break()
-    print(f'DISPLAYING ALL PACKAGES with a deadline')
-    data.print_line_break()
-
-    for item in data.hm:
-        if item[1][1] != 'EOD':
-            print(f'\t{item}')
-
-    data.print_line_break()
-    print('\n\n')
+    # print(f'DISPLAYING ALL PACKAGES with a deadline')
+    # data.print_line_break()
+    #
+    # for item in data.hm:
+    #     if item[1][1] != 'EOD':
+    #         print(f'\t{item}')
+    #
+    # data.print_line_break()
+    # print('\n\n')
 
 
 def load_truck(truck, truck_num, starting_index):
@@ -247,17 +275,16 @@ def load_truck(truck, truck_num, starting_index):
 
     return index_counter
 
-
-def time_check(truck):
-
-    if datetime.timedelta(hours=8, minutes=35) < truck.running_time < \
-            datetime.timedelta(hours=9, minutes=25):
-        return True
-    elif datetime.timedelta(hours=9, minutes=35) < truck.running_time < \
-            datetime.timedelta(hours=10, minutes=25):
-        return True
-    elif datetime.timedelta(hours=12, minutes=3) < truck.running_time < \
-            datetime.timedelta(hours=13, minutes=12):
-        return True
-
-    return False
+# def time_check(truck, args):
+#
+#     if datetime.timedelta(hours=8, minutes=35) < truck.running_time < \
+#             datetime.timedelta(hours=9, minutes=25) and not args[0]:
+#         return True, False, False
+#     elif datetime.timedelta(hours=9, minutes=35) < truck.running_time < \
+#             datetime.timedelta(hours=10, minutes=25) and not args[1]:
+#         return True, True, False
+#     elif datetime.timedelta(hours=12, minutes=3) < truck.running_time < \
+#             datetime.timedelta(hours=13, minutes=12) and not args[2]:
+#         return True, True, True
+#     else:
+#         return False, False, False
