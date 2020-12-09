@@ -93,6 +93,13 @@ def deliver_all_packages():
             truck_1.current_location = STARTING_HUB
             truck_1.track_time(truck_1_travel_mins, truck_1_travel_secs)
 
+            # set time to 10:20 to simulate waiting for the correct address for
+            # package 9 to minimize time complexity of looping through the remaining
+            # packages every time a new destination needs to be selected
+            address_correction_time = datetime.timedelta(hours=10, minutes=20)
+
+            if truck_1.running_time < address_correction_time:
+                setattr(truck_1, 'running_time', address_correction_time)
             # reload truck 1 with the remaining packages for the day
             load_truck(truck_1, 1, last_loaded_index)
 
@@ -155,6 +162,12 @@ def deliver_all_packages():
 
             truck_2.track_time(truck_2_travel_mins, truck_2_travel_secs)
 
+    # if time_check(truck_1) or time_check(truck_2):
+    #     if truck_1.running_time > truck_2.running_time:
+    #         display_all_packages_status(truck_1.running_time)
+    #     else:
+    #         display_all_packages_status(truck_2.running_time)
+
     print(f'{"~" * 25} ALL PACKAGES DELIVERED {"~" * 25}')
 
     print(f'\n\tTruck 1 traveled '
@@ -182,7 +195,7 @@ def display_all_packages_status(time=None):
 
     print()
     data.print_line_break()
-    print(f'DISPLAYING ALL PACKAGES for the time {time}')
+    print(f'DISPLAYING ALL PACKAGES with a deadline')
     data.print_line_break()
 
     for item in data.hm:
@@ -194,6 +207,15 @@ def display_all_packages_status(time=None):
 
 
 def load_truck(truck, truck_num, starting_index):
+    """
+    Uses a truck object and truck number to load a truck with packages. Also track the
+    last used index in the hashmap to avoid searching over a list of packages that has
+    already been delivered.
+    :param truck:
+    :param truck_num:
+    :param starting_index:
+    :return:
+    """
     index_counter = 0
 
     # start at last loaded index to avoid looping through the entire hashmap every time
@@ -224,3 +246,18 @@ def load_truck(truck, truck_num, starting_index):
                 index_counter += 1
 
     return index_counter
+
+
+def time_check(truck):
+
+    if datetime.timedelta(hours=8, minutes=35) < truck.running_time < \
+            datetime.timedelta(hours=9, minutes=25):
+        return True
+    elif datetime.timedelta(hours=9, minutes=35) < truck.running_time < \
+            datetime.timedelta(hours=10, minutes=25):
+        return True
+    elif datetime.timedelta(hours=12, minutes=3) < truck.running_time < \
+            datetime.timedelta(hours=13, minutes=12):
+        return True
+
+    return False

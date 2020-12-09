@@ -21,7 +21,6 @@ Package ID,Address,City,State,Zip,Delivery Deadline,Mass KILO,Special Notes
 38,410 S State St,Salt Lake City,UT,84111,EOD,9,Can only be on truck 2
 5,410 S State St,Salt Lake City,UT,84111,EOD,5,None
 37,410 S State St,Salt Lake City,UT,84111,10:30 AM,2,None
-9,300 State St,Salt Lake City,UT,84103,EOD,2,Wrong address listed
 30,300 State St,Salt Lake City,UT,84103,10:30 AM,1,None
 8,300 State St,Salt Lake City,UT,84103,EOD,9,None
 3,233 Canyon Rd,Salt Lake City,UT,84103,EOD,2,Can only be on truck 2
@@ -39,3 +38,4 @@ Package ID,Address,City,State,Zip,Delivery Deadline,Mass KILO,Special Notes
 28,2835 Main St,Salt Lake City,UT,84115,EOD,7,Delayed on flight---will not arrive to depot until 9:05 am
 26,5383 S 900 East #104,Salt Lake City,UT,84117,EOD,25,None
 21,3595 Main St,Salt Lake City,UT,84115,EOD,3,None
+9,300 State St,Salt Lake City,UT,84103,EOD,2,Wrong address listed

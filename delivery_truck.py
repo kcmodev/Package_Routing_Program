@@ -72,4 +72,10 @@ class Truck:
         return travel_minutes, travel_seconds
 
     def track_time(self, travel_mins, travel_secs):
+        """
+        Adds to `running time` when distance is calculated and a destination is selected.
+        :param travel_mins:
+        :param travel_secs:
+        :return:
+        """
         self.running_time += datetime.timedelta(minutes=travel_mins, seconds=travel_secs)
