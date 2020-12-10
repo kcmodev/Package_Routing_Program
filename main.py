@@ -21,7 +21,7 @@ def billboard():
     data.print_line_break()
     print("""
             Please make a selection:
-            1. Initiate package delivery algorithm.
+            1. Run entire algorithm and display total miles traveled for each truck.
             2. Search all packages (Run algorithm first to search package status after delivery.)
             3. See package status within a time window.
             4. Exit program.
