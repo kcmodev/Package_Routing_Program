@@ -7,12 +7,14 @@ class HashMap:
         self.hashmap = []
         self.all_packages_loaded = False
 
-    # Method serves at the insertion function appending an item onto the hashmap. O(n)
-    # Automatically appends new packages to the end of the hashmap O(1)
+    # Method serves as an insertion function appending an item onto the hashmap. O(n).
+    # Automatically appends new packages to the end of the hashmap. O(1).
     def __setitem__(self, package_id, address, deadline, city, zipcode,
-                    weight, special_note=None, delivery_status='At the hub',
-                    new_package=False):
+                    weight, special_note=None, delivery_status='At the hub'):
         """
+        Serves as an insertion function. Initial fill O(n).
+        Appending items after a resize  O(1).
+
         Takes input add a record to the HashMap class list `hashmap`. Uses
         package ID as the key and the remainder of the line data as a list
         of values associated with the key.

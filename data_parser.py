@@ -3,50 +3,8 @@ import csv
 from hashmap import HashMap
 
 hm = HashMap()
-stops = {}
+all_destinations = {}
 names_and_addresses = {}
-
-
-def parse_distance_table():
-    """
-    Parses csv file `Distance Table` and fills a list with the data. Uses
-    `package id` as the index for the list to make searching O(1)
-    :return: None. Fills list with parsed data.
-    """
-
-    # add all lines as a list to be enumerated and added to a dictionary in
-    # the next step
-    print('Distance table loaded and parsed....')
-    with open('data/Distance Table.csv') as distance_table:
-        distances = [row for row in csv.reader(distance_table)]
-
-    # iterates over csv file and adds each stop name value from each row[0]
-    # as the key. Then adds the dict values as a list of destination and
-    # distance pair. O(n^2).
-
-    # iterate over columns
-    for x in range(0, len(distances)):
-        stops_list = []
-        if x > 0:  # puts first line at WGU in the csv file column header
-            start_name = str(distances[x][0]).strip()
-            start_address = str(distances[x][1])[0:-8]
-            start_address.strip()
-
-            # makes an associative list between stop names and addresses
-            names_and_addresses[start_address] = start_name
-            # iterate down rows
-            for y in range(0, len(distances[x])):
-                if y > 1:
-                    stop_name = distances[0][y]
-                    stop_distance = distances[x][y]
-
-                    # append the values to the list
-                    stops_list.append([stop_distance.strip(),
-                                       stop_name.strip()])
-
-            # assign a dictionary key to the values in the form
-            # of the stop name
-            stops[f'{start_name}'] = stops_list
 
 
 def determine_distance(origination_address, destination_address):
@@ -59,43 +17,43 @@ def determine_distance(origination_address, destination_address):
     """
     distance, back_to_hub = 0.0, 0.0
 
-    # retrieve values of keys for corresponding destination addresses O(1)
+    # Retrieve values of keys for corresponding destination addresses O(1).
     origination_name = names_and_addresses.get(origination_address)
     destination_name = names_and_addresses.get(destination_address)
 
-    # retrieve the index of each name to determine how to search the distance table O(n)
+    # Retrieve the index of each name to determine how to search the distance table O(n).
     origination_index = list(names_and_addresses.keys()).index(origination_address)
     destination_index = list(names_and_addresses.keys()).index(destination_address)
 
-    # retrieve the respective distance table lines from the stops dict O(1)
-    origination_distance_list = stops[origination_name]
-    destination_distance_list = stops[destination_name]
+    # Retrieve the respective distance table lines from the stops dict O(1).
+    origination_distance_list = all_destinations[origination_name]
+    destination_distance_list = all_destinations[destination_name]
 
-    # check where address falls in the list
-    # if destination is after, use destination location to find the travel distance
+    # Check where address falls in the list.
+    # If destination is after, use destination location to find the travel distance.
     if origination_index < destination_index:
 
-        # return distance to destination from destination list
-        # breaks after a match is found to avoid searching the entire list
-        # unless necessary
+        # Return distance to destination from destination list.
+        # Breaks after a match is found to avoid searching the entire list unless
+        # necessary. O(n).
         for stop in destination_distance_list:
             if stop[1] == origination_name:
                 distance = float(stop[0])
-                # saves distance from destination to hub
+                # Saves distance from destination to hub for the end of the route.
                 back_to_hub = float(destination_distance_list[0][0])
                 break
 
-    # if the destination is before origination in the distance table
-    # then use origination location to determine the distance
+    # If the destination is before origination in the distance table
+    # then use origination location to determine the distance.
     elif origination_index > destination_index:
 
-        # return distance to destination from origination list
-        # breaks after a match is found to avoid searching the entire list
-        # unless necessary
+        # Return distance to destination from origination list.
+        # Breaks after a match is found to avoid searching the entire list unless
+        # necessary. O(n).
         for stop in origination_distance_list:
             if stop[1] == destination_name:
                 distance = float(stop[0])
-                # saves distance from destination to hub
+                # Saves distance from destination to hub.
                 back_to_hub = float(destination_distance_list[0][0])
                 break
 
@@ -114,13 +72,13 @@ def determine_next_stop(start, all_packages_loaded):
     closest_stop_name, closest_stop_address = '', ''
 
     # Iterate through the packages on the truck and determine the destination
-    # closest to the origination. O(n)
+    # closest to the origination. O(n^2).
     for package in all_packages_loaded:
         distance, stop_name, back_to_hub = determine_distance(start,
                                                               package[1][0])
 
-        # When shortest is found save distance, name, address, and distance back to hub
-        # when the end of the route is reached.
+        # When shortest distance is found; save distance, name, address. Distance back to
+        # hub saved to be used the end of the route is reached.
         if distance < closest_stop_distance and distance != 0.0:
             closest_stop_distance = distance
             closest_stop_name = stop_name
@@ -134,6 +92,25 @@ def determine_next_stop(start, all_packages_loaded):
         closest_stop_hub_distance
 
 
+def get_address_from_name(address):
+    for key, value in names_and_addresses.items():
+        if value == address:
+            return key
+
+
+def package_search(package_id):
+    """
+    Searches hashmap by package id and returns the appropriate package.
+    :param package_id:
+    :return:
+    """
+
+    for package in hm:
+        if package[0] == str(package_id):
+            print(package)
+            return
+
+
 def parse_package_file(package_file):
     """
     Parses csv file `Package File` and fills a list with the data. Uses
@@ -145,9 +122,9 @@ def parse_package_file(package_file):
     with open(package_file) as distance_table:
         lines = csv.reader(distance_table)
 
-        # enumerate and fill package data O(n)
+        # Enumerate and fill package data O(n).
         for x, line in enumerate(lines):
-            if x != 0:
+            if x != 0:  # Does not add first line (column titles).
                 package_id = line[0]
                 address = line[1]
                 city = line[2]
@@ -165,15 +142,49 @@ def parse_package_file(package_file):
                                weight, note)
 
 
-def get_address_from_name(address):
-    for key, value in names_and_addresses.items():
-        if value == address:
-            return key
+def parse_distance_table():
+    """
+    Parses csv file `Distance Table` and fills a list with the data. Uses
+    `package id` as the index for the list to make searching O(1)
+    :return: None. Fills list with parsed data.
+    """
 
+    # Add all lines as a list to be enumerated and added to a dictionary in
+    # the next step.
+    print('Distance table loaded and parsed....')
 
-def package_search(package_id):
-    pass
+    with open('data/Distance Table.csv') as distance_table:
+        distances = [row for row in csv.reader(distance_table)]
+
+    # Iterates over csv file and adds each stop name value from each row[0]
+    # as the key. Then adds the dict values as a list of destination and
+    # distance pair. O(n^2).
+    for x in range(0, len(distances)):  # Iterate over columns.
+        stops_list = []
+        if x > 0:  # Puts first line at WGU in the csv file column header.
+            origination_name = str(distances[x][0]).strip()
+            origination_address = str(distances[x][1])[0:-8]
+            origination_address.strip()
+
+            # Builds an associative list between stop names and addresses.
+            names_and_addresses[origination_address] = origination_name
+
+            for y in range(0, len(distances[x])):  # iterate down rows
+                if y > 1:
+                    destination_name = distances[0][y]
+                    destination_distance = distances[x][y]
+
+                    # Append the values to the list.
+                    stops_list.append([destination_distance.strip(),
+                                       destination_name.strip()])
+
+            # Assign a dictionary key to the values in the form of the stop name
+            all_destinations[f'{origination_name}'] = stops_list
 
 
 def print_line_break():
+    """
+    User for formatting and readability.
+    :return:
+    """
     print('*' * 100)

@@ -4,10 +4,6 @@ from data_parser import hm
 
 
 class Truck:
-    """
-    Truck object to track packages on the truck, as well as calculate speed
-    and distance traveled.
-    """
 
     def __init__(self):
         self.packages_loaded = []  # list of packages currently on the truck
@@ -32,7 +28,7 @@ class Truck:
     def deliver_package(self, package_id, package_address, truck_num, delivery_time):
         """
         Finds package on the truck and "delivers" it by removing it from the
-        list of packages currently on the truck and marking it as delivered
+        list of packages currently on the truck and marking it as delivered. O(n)
         in the hashmap.
         :param delivery_time:
         :param truck_num:
@@ -51,17 +47,18 @@ class Truck:
 
     def num_packages_loaded(self):
         """
-        Returns number of packages currently on the truck.
+        Returns number of packages currently on the truck based on the length of the
+        list of packages associated with being loaded on the truck. O(1)
         :return:
         """
         return len(self.packages_loaded)
 
     def calculate_time_traveled(self, distance):
         """
-        Gets travel time in minutes
+        Gets travel time in minutes.
         Takes distance divided by the constant truck speed which gives time in
         a fraction of an hour. Then multiplies by 60 to get the time in minutes
-        and then 60 again for seconds. Rounded up.
+        and then 60 again for seconds. Rounded up. O(1)
         :param distance: miles to the destination
         :return: travel time in minutes
         """
@@ -73,7 +70,8 @@ class Truck:
 
     def track_time(self, travel_mins, travel_secs):
         """
-        Adds to `running time` when distance is calculated and a destination is selected.
+        Adds to `running time` when distance is calculated and a destination is
+        selected. O(1)
         :param travel_mins:
         :param travel_secs:
         :return:
