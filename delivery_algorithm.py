@@ -5,7 +5,7 @@ import datetime
 STARTING_HUB = 'Salt Lake City UT'
 
 
-def deliver_all_packages():
+def deliver_all_packages(selection=None):
     """
     Runs the algorithm to deliver all packages. Starts by calling the load packages
     method. Then, while keeping track of the current time for each vehicle, delivers
@@ -22,8 +22,8 @@ def deliver_all_packages():
     # Set truck 2 start time to 0905 hrs to account for late packages.
     setattr(truck_2, "running_time", datetime.timedelta(hours=9, minutes=5))
 
-    print(f'TRUCK 1 STARTING TIME: {truck_1.running_time}')
-    print(f'TRUCK 2 STARTING TIME: {truck_2.running_time}\n')
+    # print(f'TRUCK 1 STARTING TIME: {truck_1.running_time}')
+    # print(f'TRUCK 2 STARTING TIME: {truck_2.running_time}\n')
 
     # Loads truck 1 and retains the last used index to make adding the remaining
     # packages faster by avoiding searching the entire hashmap every time. O(n).
@@ -39,17 +39,31 @@ def deliver_all_packages():
         if datetime.timedelta(hours=8, minutes=35) < truck_1.running_time < \
                 datetime.timedelta(hours=9, minutes=25) and not printed_morning:
             printed_morning = True
-            display_all_packages_status('morning', truck_1.running_time)
+
+            if selection is None:
+                display_all_packages_status('morning', truck_1.running_time)
+
+            elif selection == 1:
+                display_all_packages_status('morning', truck_1.running_time)
+                return
+
         elif datetime.timedelta(hours=9, minutes=35) < truck_1.running_time < \
                 datetime.timedelta(hours=10, minutes=25) and not printed_afternoon:
             printed_afternoon = True
-            display_all_packages_status('afternoon', truck_1.running_time)
+
+            if selection is None:
+                display_all_packages_status('afternoon', truck_1.running_time)
+
+            elif selection == 2:
+                display_all_packages_status('afternoon', truck_1.running_time)
+                return
+
 
         # get TRUCK 1 closest destination name, address, distance,
         # current location, and distance from that stop back to the hub
         if truck_1.num_packages_loaded() > 0:
 
-            print(f'\nFinding the next stop for TRUCK 1...')
+            # print(f'\nFinding the next stop for TRUCK 1...')
 
             truck_1_dest_name, truck_1_dest_address, truck_1_dest_distance, \
                 truck_1_dest_hub_distance = \
@@ -71,11 +85,11 @@ def deliver_all_packages():
                                     truck_1_dest_address,
                                     1, truck_1.running_time)
 
-            print(f'\tTime for Truck 1 to travel from {truck_1.current_location} '
-                  f'to {truck_1_dest_address} ({truck_1_dest_distance} miles) '
-                  f'is {truck_1_travel_mins} minutes and '
-                  f'{truck_1_travel_secs} seconds')
-            print(f'{truck_1.num_packages_loaded()} packages left on Truck 1')
+            # print(f'\tTime for Truck 1 to travel from {truck_1.current_location} '
+            #       f'to {truck_1_dest_address} ({truck_1_dest_distance} miles) '
+            #       f'is {truck_1_travel_mins} minutes and '
+            #       f'{truck_1_travel_secs} seconds')
+            # print(f'{truck_1.num_packages_loaded()} packages left on Truck 1')
 
             truck_1.total_miles_traveled += truck_1_dest_distance
             truck_1.current_location = truck_1_dest_address
@@ -83,18 +97,18 @@ def deliver_all_packages():
         # If there are no more packages loaded, return truck to hub and add
         # miles and time traveled.
         elif truck_1.num_packages_loaded() == 0:
-            print(f'\n{"~" * 10} Truck 1 traveling back to hub for '
-                  f'{truck_1_dest_hub_distance} miles. {"~" * 10}')
+            # print(f'\n{"~" * 10} Truck 1 traveling back to hub for '
+            #       f'{truck_1_dest_hub_distance} miles. {"~" * 10}')
 
             truck_1.total_miles_traveled += truck_1_dest_hub_distance
             truck_1_travel_mins, truck_1_travel_secs = \
                 truck_1.calculate_time_traveled(truck_1_dest_hub_distance)
 
-            print(f'\tTime for Truck 1 to travel from'
-                  f' {truck_1.current_location} to '
-                  f'{STARTING_HUB} ({truck_1_dest_hub_distance} miles) '
-                  f'is {truck_1_travel_mins} minutes and '
-                  f'{truck_1_travel_secs} seconds\n')
+            # print(f'\tTime for Truck 1 to travel from'
+            #       f' {truck_1.current_location} to '
+            #       f'{STARTING_HUB} ({truck_1_dest_hub_distance} miles) '
+            #       f'is {truck_1_travel_mins} minutes and '
+            #       f'{truck_1_travel_secs} seconds\n')
 
             truck_1.current_location = STARTING_HUB
             truck_1.track_time(truck_1_travel_mins, truck_1_travel_secs)
@@ -116,12 +130,12 @@ def deliver_all_packages():
 
             if status_checker_count == 0:
                 status_checker_count = 1
-                print('\nTRUCK 2 IS NOW IN SERVICE')
-                print(f'Truck 2 left the depot at: {truck_2.running_time} hours')
+                # print('\nTRUCK 2 IS NOW IN SERVICE')
+                # print(f'Truck 2 left the depot at: {truck_2.running_time} hours')
                 last_loaded_index += load_truck(truck_2, 2, last_loaded_index)
 
             if truck_2.num_packages_loaded() > 0:
-                print(f'\nFinding the next stop for TRUCK 2...')
+                # print(f'\nFinding the next stop for TRUCK 2...')
                 truck_2_dest_name, truck_2_dest_address, truck_2_dest_distance, \
                     truck_2_dest_hub_distance = \
                     data.determine_next_stop(truck_2.current_location,
@@ -142,11 +156,11 @@ def deliver_all_packages():
                                         truck_2_dest_address,
                                         2, truck_2.running_time)
 
-                print(f'\tTime for Truck 2 to travel from {truck_2.current_location} '
-                      f'to {truck_2_dest_address} ({truck_2_dest_distance} miles) '
-                      f'is {truck_2_travel_mins} minutes and '
-                      f'{truck_2_travel_secs} seconds')
-                print(f'{truck_2.num_packages_loaded()} packages left on Truck 2')
+                # print(f'\tTime for Truck 2 to travel from {truck_2.current_location} '
+                #       f'to {truck_2_dest_address} ({truck_2_dest_distance} miles) '
+                #       f'is {truck_2_travel_mins} minutes and '
+                #       f'{truck_2_travel_secs} seconds')
+                # print(f'{truck_2.num_packages_loaded()} packages left on Truck 2')
 
                 truck_2.total_miles_traveled += truck_2_dest_distance
                 truck_2.current_location = truck_2_dest_address
@@ -155,31 +169,36 @@ def deliver_all_packages():
                 # miles and time traveled.
                 if truck_2.num_packages_loaded() == 0 and status_checker_count == 1:
                     status_checker_count = 2
-                    print(f'\n{"~" * 10} Truck 2 traveling back to hub for '
-                          f'{truck_2_dest_hub_distance} miles. {"~" * 10}')
+                    # print(f'\n{"~" * 10} Truck 2 traveling back to hub for '
+                    #       f'{truck_2_dest_hub_distance} miles. {"~" * 10}')
 
                     truck_2.total_miles_traveled += truck_2_dest_hub_distance
                     truck_2_travel_mins, truck_2_travel_secs = \
                         truck_2.calculate_time_traveled(truck_2_dest_hub_distance)
 
-                    print(
-                        f'\tTime for Truck 2 to travel from'
-                        f' {truck_2.current_location} to '
-                        f'{STARTING_HUB} ({truck_2_dest_hub_distance} miles) '
-                        f'is {truck_2_travel_mins} minutes and '
-                        f'{truck_2_travel_secs} seconds\n')
+                    # print(
+                    #     f'\tTime for Truck 2 to travel from'
+                    #     f' {truck_2.current_location} to '
+                    #     f'{STARTING_HUB} ({truck_2_dest_hub_distance} miles) '
+                    #     f'is {truck_2_travel_mins} minutes and '
+                    #     f'{truck_2_travel_secs} seconds\n')
 
                     truck_2.current_location = STARTING_HUB
 
                     truck_2.track_time(truck_2_travel_mins, truck_2_travel_secs)
 
-    print(f'\n{"~" * 50} ALL PACKAGES DELIVERED {"~" * 50}\n')
+    # print(f'\n{"~" * 50} ALL PACKAGES DELIVERED {"~" * 50}\n')
 
     if data.hm.all_packages_loaded and truck_1.num_packages_loaded() == 0 and \
             truck_2.num_packages_loaded() == 0:
-        # setattr(truck_1, 'running_time', datetime.timedelta(hours=13, minutes=0))
         last_report_window = datetime.timedelta(hours=13, minutes=0)
-        display_all_packages_status('evening', last_report_window)
+
+        if selection is None:
+            display_all_packages_status('evening', last_report_window)
+
+        elif selection == 3:
+            display_all_packages_status('evening', last_report_window)
+            return
 
     total_miles = truck_1.total_miles_traveled + truck_2.total_miles_traveled
 
@@ -229,6 +248,21 @@ def display_all_packages_status(time_period, time=None):
     # Iterate through entire hashmap to print all package's status. O(n).
     for item in data.hm:
         print(f'\t{item}')
+
+    print()
+
+
+def display_time_window(selection):
+
+    if selection == 1:
+        deliver_all_packages(selection)
+    elif selection == 2:
+        deliver_all_packages(selection)
+    elif selection == 3:
+        deliver_all_packages(selection)
+    else:
+        print('Invalid selection.')
+        return
 
 
 def load_truck(truck, truck_num, starting_index):

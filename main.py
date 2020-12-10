@@ -1,5 +1,5 @@
 import data_parser as data
-from delivery_algorithm import deliver_all_packages
+from delivery_algorithm import deliver_all_packages, display_time_window
 
 
 def main():
@@ -47,6 +47,7 @@ def billboard():
                 3. Between 12:03pm and 1:12pm
             """)
             data.print_line_break()
+            display_time_window(int(input('Selection: ')))
 
         elif user_selection == 4:  # Exit the program.
             print('Terminating program.')
