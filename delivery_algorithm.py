@@ -49,7 +49,7 @@ def deliver_all_packages():
         # current location, and distance from that stop back to the hub
         if truck_1.num_packages_loaded() > 0:
 
-            print(f'{"*" * 10} Finding the next stop for TRUCK 1 {"*" * 10}')
+            print(f'\nFinding the next stop for TRUCK 1...')
 
             truck_1_dest_name, truck_1_dest_address, truck_1_dest_distance, \
                 truck_1_dest_hub_distance = \
@@ -82,14 +82,14 @@ def deliver_all_packages():
         # if there are no more packages loaded, return TRUCK 1 to hub and add
         # miles and time traveled
         elif truck_1.num_packages_loaded() == 0:
-            print(f'\n{"~" * 10} Truck 1 traveling back to hub for '
+            print(f'{"~" * 10} Truck 1 traveling back to hub for '
                   f'{truck_1_dest_hub_distance} miles. {"~" * 10}')
 
             truck_1.total_miles_traveled += truck_1_dest_hub_distance
             truck_1_travel_mins, truck_1_travel_secs = \
                 truck_1.calculate_time_traveled(truck_1_dest_hub_distance)
 
-            print(f'\nTime for Truck 1 to travel from'
+            print(f'\tTime for Truck 1 to travel from'
                   f' {truck_1.current_location} to '
                   f'{STARTING_HUB} ({truck_1_dest_hub_distance} miles) '
                   f'is {truck_1_travel_mins} minutes and '
@@ -114,13 +114,13 @@ def deliver_all_packages():
         if truck_1.running_time >= datetime.timedelta(hours=9, minutes=5):
 
             if status_checker_count == 0:
-                status_checker_count = 2
+                status_checker_count = 1
                 last_loaded_index += load_truck(truck_2, 2, last_loaded_index)
 
             if truck_2.num_packages_loaded() > 0:
-                print(f'{"*" * 10} Finding the next stop for TRUCK 2 {"*" * 10}')
+                print(f'\nFinding the next stop for TRUCK 2...')
                 truck_2_dest_name, truck_2_dest_address, truck_2_dest_distance, \
-                truck_2_dest_hub_distance = \
+                    truck_2_dest_hub_distance = \
                     data.determine_next_stop(truck_2.current_location,
                                              truck_2.packages_loaded)
 
@@ -147,42 +147,47 @@ def deliver_all_packages():
                 truck_2.total_miles_traveled += truck_2_dest_distance
                 truck_2.current_location = truck_2_dest_address
 
-            # if there are no more packages loaded, return TRUCK 2 to hub and add
-            # miles and time traveled
-            elif truck_2.num_packages_loaded() == 0 and status_checker_count == 1:
-                status_checker_count = 2
-                print(f'{"~" * 10} Truck 2 traveling back to hub for '
-                      f'{truck_2_dest_hub_distance} miles. {"~" * 10}')
+                # if there are no more packages loaded, return TRUCK 2 to hub and add
+                # miles and time traveled
+                if truck_2.num_packages_loaded() == 0 and status_checker_count == 1:
+                    status_checker_count = 2
+                    print(f'\n{"~" * 10} Truck 2 traveling back to hub for '
+                          f'{truck_2_dest_hub_distance} miles. {"~" * 10}')
 
-                truck_2.total_miles_traveled += truck_2_dest_hub_distance
-                truck_2_travel_mins, truck_2_travel_secs = \
-                    truck_2.calculate_time_traveled(truck_2_dest_hub_distance)
+                    truck_2.total_miles_traveled += truck_2_dest_hub_distance
+                    truck_2_travel_mins, truck_2_travel_secs = \
+                        truck_2.calculate_time_traveled(truck_2_dest_hub_distance)
 
-                print(
-                    f'\nTime for Truck 2 to travel from'
-                    f' {truck_2.current_location} to '
-                    f'{STARTING_HUB} ({truck_2_dest_hub_distance} miles) '
-                    f'is {truck_2_travel_mins} minutes and '
-                    f'{truck_2_travel_secs} seconds\n')
+                    print(
+                        f'\tTime for Truck 2 to travel from'
+                        f' {truck_2.current_location} to '
+                        f'{STARTING_HUB} ({truck_2_dest_hub_distance} miles) '
+                        f'is {truck_2_travel_mins} minutes and '
+                        f'{truck_2_travel_secs} seconds\n')
 
-                truck_2.current_location = STARTING_HUB
+                    truck_2.current_location = STARTING_HUB
 
-                truck_2.track_time(truck_2_travel_mins, truck_2_travel_secs)
+                    truck_2.track_time(truck_2_travel_mins, truck_2_travel_secs)
 
     print(f'\n{"~" * 50} ALL PACKAGES DELIVERED {"~" * 50}\n')
 
     if data.hm.all_packages_loaded and truck_1.num_packages_loaded() == 0 and \
             truck_2.num_packages_loaded() == 0:
-        setattr(truck_1, 'running_time', datetime.timedelta(hours=13, minutes=0))
-        display_all_packages_status('evening', truck_1.running_time)
+        # setattr(truck_1, 'running_time', datetime.timedelta(hours=13, minutes=0))
+        last_report_window = datetime.timedelta(hours=13, minutes=0)
+        display_all_packages_status('evening', last_report_window)
 
-    print(f'\n\tTruck 1 traveled '
-          f'{round(truck_1.total_miles_traveled, 2)} miles total.')
-    print(f'\tTruck 1 returned to HUB at {truck_1.running_time}')
+    total_miles = truck_1.total_miles_traveled + truck_2.total_miles_traveled
 
-    print(f'\n\tTruck 2 traveled '
-          f'{round(truck_2.total_miles_traveled, 2)} miles total.')
-    print(f'\tTruck 1 returned to HUB at {truck_2.running_time}')
+    print(f"""
+Truck 1 traveled {round(truck_1.total_miles_traveled, 2)} miles total.
+Truck 1 returned to HUB at {truck_1.running_time}.
+    
+Truck 2 traveled {round(truck_2.total_miles_traveled, 2)} miles total.
+Truck 2 returned to HUB at {truck_2.running_time}
+    
+For a grand total of {round(total_miles, 1)} miles between both trucks.
+""")
 
 
 def display_all_packages_status(time_period, time=None):
@@ -194,18 +199,21 @@ def display_all_packages_status(time_period, time=None):
     :return:
     """
     if time_period == 'morning':
+        print()
         data.print_line_break()
         print(f'DISPLAYING ALL PACKAGES for the time {time}. Falling between 8:35 and '
               f'9:25')
         data.print_line_break()
 
     elif time_period == 'afternoon':
+        print()
         data.print_line_break()
         print(f'DISPLAYING ALL PACKAGES for the time {time}. Falling between 9:35 and '
               f'10:25')
         data.print_line_break()
 
     elif time_period == 'evening':
+        print()
         data.print_line_break()
         print(f'DISPLAYING ALL PACKAGES for the time {time}. Falling between 12:03 and '
               f'13:12 (1:12 pm)')

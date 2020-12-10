@@ -16,8 +16,10 @@ def billboard():
     data.print_line_break()
     print("""
             Please make a selection:
-            1. Search all packages
-            2. Initiate package delivery algorithm
+            1. Initiate package delivery algorithm
+            2. Search all packages
+            3. Exit
+            
     """)
     data.print_line_break()
 
@@ -25,11 +27,14 @@ def billboard():
         user_selection = int(input('Selection: '))
 
         if user_selection == 1:
-            # data.package_search(int(input('Enter the Package ID: ')))
-            pass
+            deliver_all_packages()
 
         elif user_selection == 2:
-            deliver_all_packages()
+            data.package_search(int(input('Enter the Package ID: ')))
+
+        elif user_selection == 3:
+            print('Terminating program.')
+            exit(1)
 
         else:
             raise ValueError

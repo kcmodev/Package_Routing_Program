@@ -39,7 +39,7 @@ class HashMap:
     def get_package_id(self, address):
         """
         Serves as the lookup function. Iterates through the hashmap and returns a
-        package based on address. O(n)
+        package based on address. O(n).
         :param address:
         :return:
         """
@@ -102,7 +102,7 @@ class HashMap:
     def __len__(self):
         """
         Function gives hashmap the len function to enable determining the amount of total
-        packages to be delivered.
+        packages to be delivered. O(1).
         :return:
         """
         return len(self.hashmap)
@@ -110,7 +110,7 @@ class HashMap:
     def __getitem__(self, item):
         """
         Function makes hashmap subscriptable which allows selecting individual packages
-        to be loaded onto a truck.
+        to be loaded onto a truck. O(1)
         :param item:
         :return:
         """
