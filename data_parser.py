@@ -22,7 +22,7 @@ def parse_distance_table():
 
     # iterates over csv file and adds each stop name value from each row[0]
     # as the key. Then adds the dict values as a list of destination and
-    # distance pair for a time complexity of O(n^2)
+    # distance pair. O(n^2).
 
     # iterate over columns
     for x in range(0, len(distances)):
@@ -109,20 +109,18 @@ def determine_next_stop(start, all_packages_loaded):
     :param all_packages_loaded:
     :return:
     """
-    # print(f'\n{"*" * 10} Finding stop closest to {start} {"*" * 10}')
     closest_stop_distance = 99999
     closest_stop_hub_distance = 0.0
     closest_stop_name, closest_stop_address = '', ''
 
-    # iterate through the packages on the truck and determine the destination
-    # closest to the origination
+    # Iterate through the packages on the truck and determine the destination
+    # closest to the origination. O(n)
     for package in all_packages_loaded:
         distance, stop_name, back_to_hub = determine_distance(start,
                                                               package[1][0])
-        # print(f'\t{stop_name} is {distance} miles away.')
 
-        # when shortest is found save distance, name, address, and distance back to hub
-        # when the end of the route is reached
+        # When shortest is found save distance, name, address, and distance back to hub
+        # when the end of the route is reached.
         if distance < closest_stop_distance and distance != 0.0:
             closest_stop_distance = distance
             closest_stop_name = stop_name
@@ -150,7 +148,6 @@ def parse_package_file(package_file):
         # enumerate and fill package data O(n)
         for x, line in enumerate(lines):
             if x != 0:
-                # packages.append(line)
                 package_id = line[0]
                 address = line[1]
                 city = line[2]

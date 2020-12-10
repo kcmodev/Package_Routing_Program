@@ -17,7 +17,7 @@ class Truck:
         self.destination = ''
         self.destination_distance = 0.0
         self.destination_hub_distance = 0.0
-        self.miles_traveled = 0
+        self.total_miles_traveled = 0
         self.running_time = datetime.timedelta(hours=8, minutes=0, seconds=0)
 
     def load_package(self, package):
@@ -41,8 +41,8 @@ class Truck:
         :return: none
         """
 
-        # this has to run in reverse to avoid erroneous results resulting from
-        # altering the index of the list while iterating in the normal fashion
+        # Runs in reverse to avoid erroneous results resulting from altering the index of
+        # the list while iterating in the ascending order. O(n).
         for package in reversed(self.packages_loaded):
             if package[0] == package_id or package[1][0] == package_address:
                 self.packages_loaded.remove(package)
@@ -66,7 +66,7 @@ class Truck:
         :return: travel time in minutes
         """
         travel_time = (distance / self.TRUCK_SPEED) * 60 * 60
-        travel_minutes = int(travel_time / 60)
+        travel_minutes = int(travel_time // 60)
         travel_seconds = int(travel_time % 60)
 
         return travel_minutes, travel_seconds
