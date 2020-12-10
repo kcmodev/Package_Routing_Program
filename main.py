@@ -1,3 +1,5 @@
+import sys
+
 import data_parser as data
 from delivery_algorithm import deliver_all_packages, display_time_window
 
@@ -51,7 +53,7 @@ def billboard():
 
         elif user_selection == 4:  # Exit the program.
             print('Terminating program.')
-            exit(1)
+            sys.exit()
 
         # Raises a value error for an invalid choice and returns the user to the main
         # screen.

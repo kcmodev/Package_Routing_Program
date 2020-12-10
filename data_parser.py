@@ -1,8 +1,8 @@
 import csv
 
-from hashmap import HashMap
+from hashtable import HashTable
 
-hm = HashMap()
+hm = HashTable()
 all_destinations = {}
 names_and_addresses = {}
 
@@ -10,7 +10,7 @@ names_and_addresses = {}
 def determine_distance(origination_address, destination_address):
     """
     Uses the origination and destination addresses to determine the shortest stop relative
-    to the truck's current location.
+    to the truck's current location. O(n).
     :param origination_address:
     :param destination_address:
     :return:
@@ -93,6 +93,12 @@ def determine_next_stop(start, all_packages_loaded):
 
 
 def get_address_from_name(address):
+    """
+    Takes in the name of the location and returns the address. O(n) worst case. Will
+    break out if it finds the address early.
+    :param address:
+    :return:
+    """
     for key, value in names_and_addresses.items():
         if value == address:
             return key
@@ -100,7 +106,7 @@ def get_address_from_name(address):
 
 def package_search(package_id):
     """
-    Searches hashmap by package id and returns the appropriate package.
+    Searches hashtable by package id and returns the appropriate package.
     :param package_id:
     :return:
     """
@@ -125,7 +131,7 @@ def parse_package_file(package_file):
         # Enumerate and fill package data O(n).
         for x, line in enumerate(lines):
             if x != 0:  # Does not add first line (column titles).
-                package_id = line[0]
+                package_id = int(line[0])
                 address = line[1]
                 city = line[2]
                 state = line[3]

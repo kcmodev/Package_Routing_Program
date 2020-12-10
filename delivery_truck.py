@@ -29,7 +29,7 @@ class Truck:
         """
         Finds package on the truck and "delivers" it by removing it from the
         list of packages currently on the truck and marking it as delivered. O(n)
-        in the hashmap.
+        in the hashtable.
         :param delivery_time:
         :param truck_num:
         :param package_address:

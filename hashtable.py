@@ -1,21 +1,21 @@
 import data_parser as data
 
 
-class HashMap:
+class HashTable:
 
     def __init__(self):
-        self.hashmap = []
+        self.hashtable = []
         self.all_packages_loaded = False
 
-    # Method serves as an insertion function appending an item onto the hashmap. O(n).
-    # Automatically appends new packages to the end of the hashmap. O(1).
+    # Method serves as an insertion function appending an item onto the hashtable. O(n).
+    # Automatically appends new packages to the end of the hashtable. O(1).
     def __setitem__(self, package_id, address, deadline, city, zipcode,
                     weight, special_note=None, delivery_status='At the hub'):
         """
         Serves as an insertion function. Initial fill O(n).
         Appending items after a resize  O(1).
 
-        Takes input add a record to the HashMap class list `hashmap`. Uses
+        Takes input add a record to the Hashtable class list `hashtable`. Uses
         package ID as the key and the remainder of the line data as a list
         of values associated with the key.
         :param package_id:
@@ -28,7 +28,7 @@ class HashMap:
         :return:
         """
 
-        self.hashmap.append([package_id, [
+        self.hashtable.append([package_id, [
             address,
             deadline,
             city,
@@ -40,28 +40,28 @@ class HashMap:
 
     def get_package_id(self, address):
         """
-        Serves as the lookup function. Iterates through the hashmap and returns a
+        Serves as the lookup function. Iterates through the hashtable and returns a
         package based on address. O(n).
         :param address:
         :return:
         """
 
-        for x, package in enumerate(self.hashmap):
-            if self.hashmap[x][1][0] == data.get_address_from_name(address):
-                return self.hashmap[x][0]
+        for x, package in enumerate(self.hashtable):
+            if self.hashtable[x][1][0] == data.get_address_from_name(address):
+                return self.hashtable[x][0]
 
     def set_delivery_status(self, package_id, status):
         """
         Takes package id as input to set delivery status for a package in the
-        hashmap.
+        hashtable.
         :param package_id:
         :param status:
         :return:
         """
 
-        for x, package in enumerate(self.hashmap):
+        for x, package in enumerate(self.hashtable):
             if package[0] == package_id:
-                self.hashmap[x][1][6] = status
+                self.hashtable[x][1][6] = status
                 break
 
     def set_special_note(self, package_id, note):
@@ -72,9 +72,9 @@ class HashMap:
         :return:
         """
 
-        for x, package in enumerate(self.hashmap):
+        for x, package in enumerate(self.hashtable):
             if package[0] == package_id:
-                self.hashmap[x][1][5] = note
+                self.hashtable[x][1][5] = note
                 break
 
     def set_address(self, package_id, address):
@@ -85,35 +85,36 @@ class HashMap:
         :return:
         """
 
-        for x, package in enumerate(self.hashmap):
+        for x, package in enumerate(self.hashtable):
             if package[0] == package_id:
-                self.hashmap[x][1][0] = address
+                self.hashtable[x][1][0] = address
                 break
 
-    def resize_hashmap(self, num_to_add):
+    def resize_hashtable(self, num_to_add):
         """
-        Resizes the hashmap by appending blank entries to the end of the list. The
+        Resizes the hashtable by appending blank entries to the end of the list. The
         number of additional spaces would be determined by the user and would be
         initialized with None. O(n).
         :return:
         """
 
         for num in num_to_add:
-            self.hashmap.append(None)
+            self.hashtable.append(None)
 
     def __len__(self):
         """
-        Function gives hashmap the len function to enable determining the amount of total
+        Function gives hashtable the len function to enable determining the amount of
+        total
         packages to be delivered. O(1).
         :return:
         """
-        return len(self.hashmap)
+        return len(self.hashtable)
 
     def __getitem__(self, item):
         """
-        Function makes hashmap subscriptable which allows selecting individual packages
+        Function makes hashtable subscriptable which allows selecting individual packages
         to be loaded onto a truck. O(1)
         :param item:
         :return:
         """
-        return self.hashmap[item]
+        return self.hashtable[item]

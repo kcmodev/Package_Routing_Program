@@ -26,7 +26,7 @@ def deliver_all_packages(selection=None):
     # print(f'TRUCK 2 STARTING TIME: {truck_2.running_time}\n')
 
     # Loads truck 1 and retains the last used index to make adding the remaining
-    # packages faster by avoiding searching the entire hashmap every time. O(n).
+    # packages faster by avoiding searching the entire hashtable every time. O(n).
     last_loaded_index += load_truck(truck_1, 1, last_loaded_index)
 
     # Start of day, set starting point to WGU.
@@ -57,7 +57,6 @@ def deliver_all_packages(selection=None):
             elif selection == 2:
                 display_all_packages_status('afternoon', truck_1.running_time)
                 return
-
 
         # get TRUCK 1 closest destination name, address, distance,
         # current location, and distance from that stop back to the hub
@@ -245,7 +244,7 @@ def display_all_packages_status(time_period, time=None):
     else:
         return
 
-    # Iterate through entire hashmap to print all package's status. O(n).
+    # Iterate through entire hashtable to print all package's status. O(n).
     for item in data.hm:
         print(f'\t{item}')
 
@@ -253,6 +252,11 @@ def display_all_packages_status(time_period, time=None):
 
 
 def display_time_window(selection):
+    """
+    Prints the status of all packages within the user selected time window.
+    :param selection:
+    :return:
+    """
 
     if selection == 1:
         deliver_all_packages(selection)
@@ -268,7 +272,7 @@ def display_time_window(selection):
 def load_truck(truck, truck_num, starting_index):
     """
     Uses a truck object and truck number to load a truck with packages. Also track the
-    last used index in the hashmap to avoid searching over a list of packages that has
+    last used index in the hashtable to avoid searching over a list of packages that has
     already been delivered.
     :param truck:
     :param truck_num:
@@ -277,7 +281,9 @@ def load_truck(truck, truck_num, starting_index):
     """
     index_counter = 0
 
-    # Start at last loaded index to avoid looping through the entire hashmap every time.
+    # Start at last loaded index to avoid looping through the entire hashtable every time.
+    # Complexity is O(n) which will decrease with each subsequent search since you will
+    # not have to look through the entire list each time to find a match.
     for x in range(starting_index, len(data.hm)):
         package = data.hm[x]
         package_id = package[0]
