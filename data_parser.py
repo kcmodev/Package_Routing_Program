@@ -1,6 +1,6 @@
 import csv
 
-from hashtable import HashTable
+from hash_table import HashTable
 
 hm = HashTable()
 all_destinations = {}
@@ -112,10 +112,12 @@ def package_search(package_id):
     """
 
     for package in hm:
-        if package[0] == str(package_id):
+        if package[0] == package_id:
             print(package)
             return
 
+    print('No package with that ID found.')
+    return
 
 def parse_package_file(package_file):
     """
@@ -134,7 +136,6 @@ def parse_package_file(package_file):
                 package_id = int(line[0])
                 address = line[1]
                 city = line[2]
-                state = line[3]
                 zipcode = line[4]
                 deadline = line[5]
                 weight = line[6]

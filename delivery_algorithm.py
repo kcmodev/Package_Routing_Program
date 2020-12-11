@@ -33,20 +33,27 @@ def deliver_all_packages(selection=None):
     truck_1.current_location = STARTING_HUB
     truck_2.current_location = STARTING_HUB
 
+    # This starts the main looping algorithm of the program to deliver all the
+    # packages. The overall complexity of this algorithm is O(n^3) due to the linear
+    # iteration through the package list, and the nested loops to determine the closest
+    # stop for each truck as it delivers each package and moves the truck to the next
+    # location.
     while truck_1.num_packages_loaded() > 0 \
             or truck_2.num_packages_loaded() > 0:
 
+        # checks for the time to be within the window of the first package status check
         if datetime.timedelta(hours=8, minutes=35) < truck_1.running_time < \
                 datetime.timedelta(hours=9, minutes=25) and not printed_morning:
-            printed_morning = True
+            printed_morning = True  # determines if this report has already been ran
 
-            if selection is None:
+            if selection is None:  # the whole algorithm is ran all the reports will print
                 display_all_packages_status('morning', truck_1.running_time)
 
             elif selection == 1:
                 display_all_packages_status('morning', truck_1.running_time)
                 return
 
+        # checks for the time to be within the window of the second package status check
         elif datetime.timedelta(hours=9, minutes=35) < truck_1.running_time < \
                 datetime.timedelta(hours=10, minutes=25) and not printed_afternoon:
             printed_afternoon = True
@@ -64,19 +71,21 @@ def deliver_all_packages(selection=None):
 
             # print(f'\nFinding the next stop for TRUCK 1...')
 
+            # uses the truck's current location and list of packages loaded to
+            # determine the next stop
             truck_1_dest_name, truck_1_dest_address, truck_1_dest_distance, \
                 truck_1_dest_hub_distance = \
                 data.determine_next_stop(truck_1.current_location,
                                          truck_1.packages_loaded)
 
-            # get truck travel time
+            # get truck travel time based on distance and truck speed
             truck_1_travel_mins, truck_1_travel_secs = \
                 truck_1.calculate_time_traveled(truck_1_dest_distance)
 
-            # adjust truck running time
+            # adjust truck running time to add travel time to the next stop
             truck_1.track_time(truck_1_travel_mins, truck_1_travel_secs)
 
-            # get delivery package ID
+            # get delivery package ID to search with
             truck_1_current_package = data.hm.get_package_id(truck_1_dest_name)
 
             # mark as delivered and remove from TRUCK 1
@@ -188,6 +197,9 @@ def deliver_all_packages(selection=None):
 
     # print(f'\n{"~" * 50} ALL PACKAGES DELIVERED {"~" * 50}\n')
 
+    # The last time window for a package status check is after all the deliveries have
+    # been made. This sets the time to within the required range and prints the package
+    # status list.
     if data.hm.all_packages_loaded and truck_1.num_packages_loaded() == 0 and \
             truck_2.num_packages_loaded() == 0:
         last_report_window = datetime.timedelta(hours=13, minutes=0)
@@ -304,6 +316,8 @@ def load_truck(truck, truck_num, starting_index):
                 break
 
         elif package_special_note == 'Wrong address listed':
+            # checks for the time to be 10:20 which is when package #9 has it's address
+            # information updated
             if truck.running_time >= datetime.timedelta(hours=10, minutes=20):
                 data.hm.set_special_note(package_id,
                                          f'Address corrected at {truck.running_time}')

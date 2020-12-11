@@ -7,7 +7,8 @@ class HashTable:
         self.hashtable = []
         self.all_packages_loaded = False
 
-    # Method serves as an insertion function appending an item onto the hashtable. O(n).
+    # Method serves as an insertion function appending an item onto the hashtable. 1
+    # package per bucket. O(n).
     # Automatically appends new packages to the end of the hashtable. O(1).
     def __setitem__(self, package_id, address, deadline, city, zipcode,
                     weight, special_note=None, delivery_status='At the hub'):
