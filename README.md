@@ -1,1 +1,8 @@
-#Package Routing Program
+# Package Routing Program
+
+Modified version of the traveling salesman problem. Determine an efficient route and delivery distribution for a Daily Local Delivery Service (DLD) because packages are not currently being consistently delivered by their promised deadline. The DLD route has two trucks, two drivers, and an average of 40 packages to deliver each day. Each package has specific criteria and delivery requirements.
+
+The program determines a solution where all 40 packages in the attached CSV file will be delivered on time while meeting each package’s requirements and keeping the combined total distance traveled under 140 miles for both trucks. Distances to each location are given in the attached "Distance Table" CSV file. The intent is to use the program for this specific location and also for many other cities in each state where DLD has a presence. As such, you will need to include detailed comments to make your code easy to follow and to justify the decisions you made while writing your scripts. The user can see, at assigned points, the progress of each truck and its packages and at what time the delivery occurred as well.
+
+The data for all the packages are stored in a hash table developed manually per the requirements of the assignment. They are added in the order listed in the accompanying CSV file and then referenced by their package number making package searching O(n) worst case. The distance table is setup as an adjacency table, referencing each location with the distance to every other stop in the table. Determining the distance to a location has a time complexity of O(n) worst case.
+
